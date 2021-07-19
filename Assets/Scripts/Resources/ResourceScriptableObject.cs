@@ -10,7 +10,7 @@ public class ResourceScriptableObject : ScriptableObject
     //private int ResourceValue;
 
     public enum RESOURCE {COIN, CRYSTAL, MATERIALS, METAL_NUGGET, CRYSTAL_FRAGMENT, SCRAP};
-    private int ResourceQuantity;
+    public int ResourceQuantity;
     
 
     private void Init(RESOURCE Resource, int Quantity){
@@ -18,10 +18,10 @@ public class ResourceScriptableObject : ScriptableObject
         this.ResourceQuantity = Quantity;
     }
 
-    public ResourceScriptableObject CreateResource(RESOURCE Resource, int Quantity){
-        ResourceScriptableObject resource = ScriptableObject.CreateInstance<ResourceScriptableObject>();
-        resource.Init(Resource, Quantity);
-        return resource;
+    public ResourceScriptableObject SetResource(RESOURCE Resource, int Quantity){
+        ResourceScriptableObject Object = ScriptableObject.CreateInstance<ResourceScriptableObject>();
+        Object.Init(Resource, Quantity);
+        return Object;
     }
     
     RESOURCE NameResource(RESOURCE Resource)

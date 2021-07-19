@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TradeGameManager : MonoBehaviour
 {
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,7 +19,7 @@ public class TradeGameManager : MonoBehaviour
     }
 
 
-    private List<TradeOfferScriptableObject> GenerateTotalTrades(int CoinBalance,Hashtable Resources)
+    public List<TradeOfferScriptableObject> GenerateTotalTrades()
     {
         
         List<TradeOfferScriptableObject> Trades = new List<TradeOfferScriptableObject>();
@@ -36,10 +38,16 @@ public class TradeGameManager : MonoBehaviour
     }
 
 
-    private TradeOfferScriptableObject GenerateTradeOffer()
+    public TradeOfferScriptableObject GenerateTradeOffer()
     {
-        TradeOfferScriptableObject Offer = new TradeOfferScriptableObject();
-        Offer.CreateTradeOffer("",TradeOfferScriptableObject.TRADE_QUALITY.BAD);
+        ResourceScriptableObject RequestedResource = ScriptableObject.CreateInstance<ResourceScriptableObject>();
+        ResourceScriptableObject OfferedResource = ScriptableObject.CreateInstance<ResourceScriptableObject>();
+        
+
+        TradeOfferScriptableObject Offer = ScriptableObject.CreateInstance<TradeOfferScriptableObject>();
+        Offer.CreateTradeOffer(Offer, "", TradeOfferScriptableObject.TRADE_QUALITY.BAD);
+        Offer.ResourcesRequested = RequestedResource.SetResource(ResourceScriptableObject.RESOURCE.METAL_NUGGET, 1);
+        Offer.ResourcesOffered = OfferedResource.SetResource(ResourceScriptableObject.RESOURCE.SCRAP, 1);
         return Offer;
     }
 
