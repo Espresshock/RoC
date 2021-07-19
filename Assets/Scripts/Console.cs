@@ -26,6 +26,9 @@ public class Console : MonoBehaviour
     void Update()
     {
         UpdateLog();
+        if(Input.anyKeyDown){
+            PrintToConsole("A KEY IS DOWN!");
+        }
     }
 
     
@@ -50,7 +53,7 @@ public class Console : MonoBehaviour
 
         if(ConsoleLogTimer < 0 && logContainer != "")
         {
-            if(ConsoleLog.Count > 5){ LogScrollSpeed = 0.5f;} else{LogScrollSpeed = 2f;} 
+            if(ConsoleLog.Count > 5){ LogScrollSpeed = 1.0f;} else{LogScrollSpeed = 5.0f;} 
             ConsoleLogTimer = LogScrollSpeed;
             ConsoleLog.Remove(ConsoleLog[0]);
         }
