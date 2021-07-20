@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TradeGameManager : MonoBehaviour
 {
-
+    private KeyCode TradeKey;
 
     // Start is called before the first frame update
     void Start()
@@ -43,12 +43,31 @@ public class TradeGameManager : MonoBehaviour
         ResourceScriptableObject RequestedResource = ScriptableObject.CreateInstance<ResourceScriptableObject>();
         ResourceScriptableObject OfferedResource = ScriptableObject.CreateInstance<ResourceScriptableObject>();
         
-
         TradeOfferScriptableObject Offer = ScriptableObject.CreateInstance<TradeOfferScriptableObject>();
+
         Offer.CreateTradeOffer(Offer, "", TradeOfferScriptableObject.TRADE_QUALITY.BAD);
         Offer.ResourcesRequested = RequestedResource.SetResource(RequestedResource, ResourceScriptableObject.RESOURCE.COIN, 1);
-        Offer.ResourcesOffered = OfferedResource.SetResource(RequestedResource, ResourceScriptableObject.RESOURCE.SCRAP, 1);
+        Offer.ResourcesOffered = OfferedResource.SetResource(OfferedResource, ResourceScriptableObject.RESOURCE.SCRAP, 1);
         return Offer;
+    }
+
+    public KeyCode GenerateTradeKey()
+    {
+
+        switch(Random.Range(0,2))
+        {
+            case 0:
+                TradeKey = KeyCode.Z;
+                break;
+            case 1:
+                TradeKey = KeyCode.X;
+                break;
+            case 2:
+                TradeKey = KeyCode.C;
+                break;
+        }
+
+        return TradeKey;
     }
 
 

@@ -63,7 +63,7 @@ public class TradeOfferScriptableObject : ScriptableObject
     // Generate offered resource quantity.
 
     public List<ResourceScriptableObject> AcceptTradeOffer(List<ResourceScriptableObject> PlayerResources){
-        
+
         foreach(ResourceScriptableObject PlayerResource in PlayerResources)
         {
             if(PlayerResource.ResourceName == ResourcesRequested.ResourceName && PlayerResource.ResourceQuantity >= ResourcesRequested.ResourceQuantity)
