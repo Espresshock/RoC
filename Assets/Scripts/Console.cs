@@ -26,9 +26,6 @@ public class Console : MonoBehaviour
     void Update()
     {
         UpdateLog();
-        if(Input.anyKeyDown){
-            PrintToConsole("A KEY IS DOWN!");
-        }
     }
 
     
