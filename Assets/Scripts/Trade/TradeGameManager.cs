@@ -46,8 +46,8 @@ public class TradeGameManager : MonoBehaviour
 
         TradeOfferScriptableObject Offer = ScriptableObject.CreateInstance<TradeOfferScriptableObject>();
         Offer.CreateTradeOffer(Offer, "", TradeOfferScriptableObject.TRADE_QUALITY.BAD);
-        Offer.ResourcesRequested = RequestedResource.SetResource(ResourceScriptableObject.RESOURCE.METAL_NUGGET, 1);
-        Offer.ResourcesOffered = OfferedResource.SetResource(ResourceScriptableObject.RESOURCE.SCRAP, 1);
+        Offer.ResourcesRequested = RequestedResource.SetResource(RequestedResource, ResourceScriptableObject.RESOURCE.COIN, 1);
+        Offer.ResourcesOffered = OfferedResource.SetResource(RequestedResource, ResourceScriptableObject.RESOURCE.SCRAP, 1);
         return Offer;
     }
 

@@ -15,11 +15,10 @@ public class ResourceScriptableObject : ScriptableObject
 
     private void Init(RESOURCE Resource, int Quantity){
         NameResource(Resource);
-        this.ResourceQuantity = Quantity;
+        ResourceQuantity = Quantity;
     }
 
-    public ResourceScriptableObject SetResource(RESOURCE Resource, int Quantity){
-        ResourceScriptableObject Object = ScriptableObject.CreateInstance<ResourceScriptableObject>();
+    public ResourceScriptableObject SetResource(ResourceScriptableObject Object, RESOURCE Resource, int Quantity){
         Object.Init(Resource, Quantity);
         return Object;
     }
@@ -28,22 +27,22 @@ public class ResourceScriptableObject : ScriptableObject
     {
         switch(Resource){
             case RESOURCE.COIN:
-                this.ResourceName = "Coin";
+                ResourceName = "Coin";
                 break;
             case RESOURCE.CRYSTAL:
-                this.ResourceName = "Crystal";
+                ResourceName = "Crystal";
                 break;
             case RESOURCE.MATERIALS:
-                this.ResourceName = "Materials";
+                ResourceName = "Materials";
                 break;
             case RESOURCE.METAL_NUGGET:
-                this.ResourceName = "Metal Nugget";
+                ResourceName = "Metal Nugget";
                 break;
             case RESOURCE.CRYSTAL_FRAGMENT:
-                this.ResourceName = "Crystal Fragment";
+                ResourceName = "Crystal Fragment";
                 break;
             case RESOURCE.SCRAP:
-                this.ResourceName = "Scrap";
+                ResourceName = "Scrap";
                 break;
         }
         return Resource;

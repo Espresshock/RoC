@@ -23,6 +23,14 @@ public class CoreGameManager : MonoBehaviour
     private float PhaseTimer;
     private float InputTimer;
 
+    private KeyCode TradeKey = KeyCode.X; //Write function to generate, get and set keycode later
+
+
+
+    private List<ResourceScriptableObject> PlayerResources;
+    private TradeOfferScriptableObject Offer;
+
+
     //Phase and turn management: Turn Counter, phase enumerator, timer and time tracking
     //Player Interaction Management: Input detection, Bind event to input 
     //Feedback Management: Send text to console, enable/disable ui and audio
@@ -33,15 +41,21 @@ public class CoreGameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //initializeplayer
+        PlayerResources = new List<ResourceScriptableObject>();
+        InitializePlayerResources();
+
         CurrentPhase = -1;
         InputTimer = InputCooldown;
+
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         PhaseUpdate();
-        CheckPlayerInput();           
+        CheckPlayerInput();
     }
 
     private void PhaseUpdate()
@@ -83,24 +97,24 @@ public class CoreGameManager : MonoBehaviour
         switch (phase)
         {
             case 0:
-            Console.PrintToConsole("New Contract Offers have Arrived.");
+                Console.PrintToConsole("New Contract Offers have Arrived.");
                 break;
             case 1:
-            Console.PrintToConsole("Time to trade!");
-            print(TradeManager);
-            
-            TradeOfferScriptableObject Offer = TradeManager.GenerateTradeOffer();
+                Console.PrintToConsole("Time to trade!");
+                print(TradeManager);
 
-            Console.PrintToConsole("The astute " + Offer.MerchantName + ", Requests a grand total of: " + Offer.ResourcesRequested.ResourceQuantity + ", of your " + Offer.ResourcesRequested.ResourceName + "\n");
-            Console.PrintToConsole("In Exchange for their: " + Offer.ResourcesOffered.ResourceQuantity + " " + Offer.ResourcesOffered.ResourceName + "\n"); 
-            Console.PrintToConsole("Too Agree with this offer, Press: ");
+                Offer = TradeManager.GenerateTradeOffer();
+
+                Console.PrintToConsole("The astute " + Offer.MerchantName + ", Requests a grand total of: " + Offer.ResourcesRequested.ResourceQuantity + ", of your " + Offer.ResourcesRequested.ResourceName + "\n");
+                Console.PrintToConsole("In Exchange for their: " + Offer.ResourcesOffered.ResourceQuantity + " " + Offer.ResourcesOffered.ResourceName + "\n");
+                Console.PrintToConsole("Too Agree with this offer, Press: ");
 
                 break;
             case 2:
-            Console.PrintToConsole("A few orders became available.");
+                Console.PrintToConsole("A few orders became available.");
                 break;
             case 3:
-            Console.PrintToConsole("The Day has come to an end, The debt collector takes his cut");
+                Console.PrintToConsole("The Day has come to an end, The debt collector takes his cut");
                 break;
         }
 
@@ -126,27 +140,33 @@ public class CoreGameManager : MonoBehaviour
         InputTimer -= Time.deltaTime;
         switch (CurrentPhase)
         {
-            case 0: 
-            // Generate key bindings for contracts
-            // foreach contract in TotalContracts
+            case 0:
+                // Generate key bindings for contracts
+                // foreach contract in TotalContracts
                 // SelectionInputOptions[rand(0,3)] = Offer.AcceptContract();
                 break;
-            case 1: 
-            // Generate key bindings for trade
-            List<KeyCode> TradeKeys = new List<KeyCode>();
-            TradeKeys.Add(KeyCode.Z);
-            TradeKeys.Add(KeyCode.X);
-            TradeKeys.Add(KeyCode.C);
-            
+            case 1:
+                // Generate key bindings for trade
+                if (Input.GetKeyDown(TradeKey) && InputTimer <= 0)
+                {
+                    PlayerResources = Offer.AcceptTradeOffer(PlayerResources);
+                    Console.PrintToConsole("You Accepted the merchants offer!" + "\n" + "You now have to following resources:" + "\n");
+                    foreach(ResourceScriptableObject resource in PlayerResources)
+                    {
+                        Console.PrintToConsole( "A total of: "+ resource.ResourceQuantity + " "+ resource.ResourceName);
+                    }
+                }
+
+
                 // SelectionInputOptions[rand(0,3)] = Trade.AcceptTrade();
                 break;
-            case 2: 
-            // Generate key bindings for trade
-            // foreach orders in TotalOrders
+            case 2:
+                // Generate key bindings for trade
+                // foreach orders in TotalOrders
                 // SelectionInputOptions[rand(0,3)] = Order.AcceptOrder();
                 break;
-            case 3: 
-            // disable input during end phase.
+            case 3:
+                // disable input during end phase.
                 break;
         }
 
@@ -157,5 +177,29 @@ public class CoreGameManager : MonoBehaviour
             InputTimer = InputCooldown;
         }
     }
+
+    private void InitializePlayerResources()
+    {
+        
+        ResourceScriptableObject StartCoin = ScriptableObject.CreateInstance<ResourceScriptableObject>();
+        StartCoin.SetResource(StartCoin, ResourceScriptableObject.RESOURCE.COIN, 10);
+        PlayerResources.Add(StartCoin);
+
+        ResourceScriptableObject StartScrap = ScriptableObject.CreateInstance<ResourceScriptableObject>();
+        StartCoin.SetResource(StartScrap, ResourceScriptableObject.RESOURCE.SCRAP, 10);
+        PlayerResources.Add(StartScrap);
+
+    }
+
+
+
+
+
+
+
+
+
+
+
 }
 

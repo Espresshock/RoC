@@ -62,10 +62,29 @@ public class TradeOfferScriptableObject : ScriptableObject
     // Generate offered resource type
     // Generate offered resource quantity.
 
-    public void AcceptTradeOffer(){
-        //When Player Accepts Trade Offer
-        //Remove resources requested from player
-        //Add Reources offered to player 
-        //Print Trade Offer
+    public List<ResourceScriptableObject> AcceptTradeOffer(List<ResourceScriptableObject> PlayerResources){
+        
+        foreach(ResourceScriptableObject PlayerResource in PlayerResources)
+        {
+            if(PlayerResource.ResourceName == ResourcesRequested.ResourceName && PlayerResource.ResourceQuantity >= ResourcesRequested.ResourceQuantity)
+            {
+                //Remove resources requested from player
+                PlayerResource.ResourceQuantity = PlayerResource.ResourceQuantity - ResourcesRequested.ResourceQuantity;
+            }
+            
+            if(PlayerResource.ResourceName == ResourcesOffered.ResourceName)
+            {
+                //Add Resources offered to player 
+                PlayerResource.ResourceQuantity = PlayerResource.ResourceQuantity + ResourcesOffered.ResourceQuantity;
+                ResourcesOffered.ResourceQuantity = 0;
+            }  
+        }
+
+        if(ResourcesOffered.ResourceQuantity != 0)
+        {
+            PlayerResources.Add(ResourcesOffered);
+        }
+        
+        return PlayerResources;
     }
 }
