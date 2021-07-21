@@ -52,7 +52,7 @@ public class CoreGameManager : MonoBehaviour
         CurrentPhase = -1;
         InputTimer = InputCooldown;
 
-        
+
     }
 
     // Update is called once per frame
@@ -104,7 +104,7 @@ public class CoreGameManager : MonoBehaviour
                 Console.PrintToConsole("New Contract Offers have Arrived. \n This phase is currently not functional");
                 break;
             case 1:
-                Console.PrintToConsole("Time to trade!");
+                Console.PrintToConsole("Time to trade! \n");
                 print(TradeManager);
                 Console.LogScrollSpeed = 3;
 
@@ -117,16 +117,18 @@ public class CoreGameManager : MonoBehaviour
 
                 break;
             case 2:
-                Console.PrintToConsole("A few orders became available. \n This phase is currently not functional");
+                Console.PrintToConsole("A few orders became available. \n This phase is currently not functional \n");
                 break;
             case 3:
-                Console.PrintToConsole("The Day has come to an end, The debt collector takes his cut");
-                foreach(ResourceScriptableObject resource in PlayerResources)
+                Console.PrintToConsole("The Day has come to an end, The debt collector takes his cut \n");
+                foreach (ResourceScriptableObject resource in PlayerResources)
                 {
                     int debt = 1;
-                    if(resource.ResourceName == "Coin"){
+                    if (resource.ResourceName == "Coin")
+                    {
                         resource.ResourceQuantity = resource.ResourceQuantity - debt;
-                        Console.PrintToConsole("He takes: " + debt + " " + resource.ResourceName + " As his payment.");
+                        Console.PrintToConsole("He takes: " + debt + " " + resource.ResourceName + " As his payment. \n");
+                        PrintPlayerResources();
                     }
                 }
                 break;
@@ -151,7 +153,8 @@ public class CoreGameManager : MonoBehaviour
 
     private void CheckPlayerInput()
     {
-        if(bPhaseInProgress){
+        if (bPhaseInProgress)
+        {
             InputTimer -= Time.deltaTime;
             switch (CurrentPhase)
             {
@@ -169,11 +172,8 @@ public class CoreGameManager : MonoBehaviour
                         print(Offer.ResourcesRequested.ResourceName + Offer.ResourcesRequested.ResourceQuantity);
                         List<ResourceScriptableObject> NewPlayerResources = Offer.AcceptTradeOffer(PlayerResources);
                         PlayerResources = NewPlayerResources;
-                        Console.PrintToConsole("You Accepted the merchants offer!" + "\n" + "You now have to following resources:" + "\n");
-                        foreach(ResourceScriptableObject resource in PlayerResources)
-                        {
-                            Console.PrintToConsole( "A total of: "+ resource.ResourceQuantity + " "+ resource.ResourceName);
-                        }
+                        Console.PrintToConsole("You Accepted the merchants offer!" + "\n");
+                        PrintPlayerResources();
                         ScriptableObject.Destroy(Offer);
                     }
 
@@ -199,9 +199,18 @@ public class CoreGameManager : MonoBehaviour
         }
     }
 
+    private void PrintPlayerResources()
+    {
+        Console.PrintToConsole("You now have the following resources:" + "\n");
+        foreach (ResourceScriptableObject resource in PlayerResources)
+        {
+            Console.PrintToConsole("A total of: " + resource.ResourceQuantity + " " + resource.ResourceName);
+        }
+    }
+
     private void InitializePlayerResources()
     {
-        
+
         ResourceScriptableObject StartCoin = ScriptableObject.CreateInstance<ResourceScriptableObject>();
         StartCoin.SetResource(StartCoin, ResourceScriptableObject.RESOURCE.COIN, 10);
         PlayerResources.Add(StartCoin);
@@ -214,21 +223,23 @@ public class CoreGameManager : MonoBehaviour
 
     private IEnumerator StartGame()
     {
-            Console.PrintToConsole("Starting Game");
-            Console.LogScrollSpeed = 3;
-            Console.PrintToConsole("Thank you for playing the first playable version River of Coin. \n ");
-            yield return new WaitForSeconds(3);
-            Console.PrintToConsole("This game is Katelyst's entry in the RNDGAME JAM II. \n \n");
-            yield return new WaitForSeconds(3);
-            Console.PrintToConsole("The River of Coin is home to a vast variety of traders, savy merchants, and customers. \n Reeti Recently bought a shop with the ambition of ascending up the river of coin, You can help him by managing some of the day to day tasks.");
-            yield return new WaitForSeconds(3);
-            Console.PrintToConsole("Reeti Recently bought a shop with the ambition of ascending up the river of coin, You can help by managing some of the day to day tasks.");
-            yield return new WaitForSeconds(5);
-            Console.PrintToConsole("Please reach out with any comments, we are excited to hear what you think! \n The game is currently limited in functionality, but aims to depict some core ideas. \n The Game loop will Start in a few seconds.");
-            yield return new WaitForSeconds(10);
-            Console.LogScrollSpeed = 1;
-            PhaseTimer = 10;
-            bPhaseInProgress = true;
+        Console.PrintToConsole("Starting Game");
+        Console.LogScrollSpeed = 3;
+        Console.PrintToConsole("Thank you for playing the first playable version River of Coin. \n ");
+        yield return new WaitForSeconds(3);
+        Console.PrintToConsole("This game is Katelyst's entry in the RNDGAME JAM II. \n \n");
+        yield return new WaitForSeconds(3);
+        Console.PrintToConsole("The River of Coin is home to a vast variety of traders, savy merchants, and customers. \n");
+        yield return new WaitForSeconds(3);
+        Console.PrintToConsole("Reeti Recently bought a shop with the ambition of ascending up the river of coin, You can help by managing some of the day to day tasks.\n");
+        yield return new WaitForSeconds(5);
+        Console.PrintToConsole("Please reach out with any comments, we are excited to hear what you think! \n The game is currently limited in functionality, but aims to depict some core ideas. \n The Game loop will Start in a few seconds.");
+        yield return new WaitForSeconds(5);
+        Console.PrintToConsole("You can Press Space Bar to skip through phases. or wait for them to pass");
+        yield return new WaitForSeconds(10);
+        Console.LogScrollSpeed = 1;
+        PhaseTimer = 10;
+        bPhaseInProgress = true;
 
     }
 
