@@ -5,24 +5,27 @@ using UnityEngine;
 public class ResourceScriptableObject : ScriptableObject
 {
 
-    public string ResourceName;
+    public string ResourceName; //Name of resource
 
     //private int ResourceValue;
 
-    public enum RESOURCE {COIN, CRYSTAL, MATERIALS, METAL_NUGGET, CRYSTAL_FRAGMENT, SCRAP};
-    public int ResourceQuantity;
+    public enum RESOURCE {COIN, CRYSTAL, MATERIALS, METAL_NUGGET, CRYSTAL_FRAGMENT, SCRAP}; // recource type
+    public int ResourceQuantity;    // number of resources held by this object
     
 
+    //Initializes scriptableobject
     private void Init(RESOURCE Resource, int Quantity){
         NameResource(Resource);
         ResourceQuantity = Quantity;
     }
 
+    //Allows external actors to set values of attached object
     public ResourceScriptableObject SetResource(ResourceScriptableObject Object, RESOURCE Resource, int Quantity){
         Object.Init(Resource, Quantity);
         return Object;
     }
     
+    //Sets resource name based on type
     public RESOURCE NameResource(RESOURCE Resource)
     {
         switch(Resource){

@@ -7,18 +7,18 @@ using UnityEngine.UI;
 public class Console : MonoBehaviour
 {
 
-    public float LogScrollSpeed;
+    public float LogScrollSpeed; // Scroll speed of the console log
 
-    private Text ConsoleObject;
-    private List<string> ConsoleLog = new List<string>();
-    private float ConsoleLogTimer;
+    private Text ConsoleObject; //Reference to the main console object
+    private List<string> ConsoleLog = new List<string>(); //The list which contains all messages sent to the console
+    private float ConsoleLogTimer; //timer which manages console scrolling
 
 
 
     // Start is called before the first frame update
     void Start()
     {
-        ConsoleObject = this.GetComponentInChildren<Text>(); 
+        ConsoleObject = this.GetComponentInChildren<Text>();
 
     }
 
@@ -28,11 +28,19 @@ public class Console : MonoBehaviour
         UpdateLog();
     }
 
-    
+    /*
+    Allows external scripts to access console and dipslay a message
+    Main functionality is to test gameplay, and to be adopted to print to specific UI elements
+    */
     public void PrintToConsole(string message){
         ConsoleLog.Add(message);
     }
 
+    /*
+    Update Log manages the updating of the text box which displays all console logs.
+    A user has requested this function is not based on a timer but on user interaction.
+    Potentially the logs can also be stored in a seperate variable.
+    */
     private void UpdateLog()
     {
         ConsoleLogTimer -= Time.deltaTime;

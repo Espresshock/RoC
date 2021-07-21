@@ -7,29 +7,25 @@ using UnityEngine.UI;
 public class TradeOfferScriptableObject : ScriptableObject
 {
 
-    public string MerchantName;
+    public string MerchantName; //Name of merchant, displayed in trade offer.
 
-    public enum TRADE_QUALITY { BAD, FAIR, GOOD, EXCELLENT };
-    public ResourceScriptableObject ResourcesRequested;
-    public ResourceScriptableObject ResourcesOffered;
+    public enum TRADE_QUALITY { BAD, FAIR, GOOD, EXCELLENT }; //Quality of trade offer, helps generate resource type and quantity
+    public ResourceScriptableObject ResourcesRequested; //Resource requested by merchant
+    public ResourceScriptableObject ResourcesOffered;   // resource offered by merchant
 
-
-    private TradeOfferScriptableObject InitTrade(TradeOfferScriptableObject TradeOffer, string Name, int turn)
+    /*
+        Initializes a new tradeofferobject
+    */
+    public TradeOfferScriptableObject CreateTradeOffer(TradeOfferScriptableObject TradeOffer, string Name, int turn)
     {
         TradeOffer.MerchantName = NameMerchant(Name);
         TradeOffer.GenerateTradeQuality(turn);
-
         return TradeOffer;
     }
 
-
-    public TradeOfferScriptableObject CreateTradeOffer(TradeOfferScriptableObject TradeOffer, string Name, int turn)
-    {
-        TradeOffer.InitTrade(TradeOffer, Name, turn);
-        return TradeOffer;
-    }
-
-
+    /*
+        Names the merchant if a name is provided, or generates a random name if one is not
+    */
     private string NameMerchant(string Name)
     {
         if (Name != "")
@@ -42,7 +38,9 @@ public class TradeOfferScriptableObject : ScriptableObject
         }
     }
 
-
+    /*
+        Randomly generates a trade quality based on the current turn
+    */
     public TradeOfferScriptableObject.TRADE_QUALITY GenerateTradeQuality(int turn)
     {
         TradeOfferScriptableObject.TRADE_QUALITY Quality = TRADE_QUALITY.BAD;
@@ -83,6 +81,9 @@ public class TradeOfferScriptableObject : ScriptableObject
         return Quality;
     }
 
+    /*
+        Randomly generates a trade resource based on quality, request/offer, and player resources
+    */
     public ResourceScriptableObject GenerateResource(TRADE_QUALITY Quality, bool Request, List<ResourceScriptableObject> PlayerResources)
     {
         ResourceScriptableObject Resource = ScriptableObject.CreateInstance<ResourceScriptableObject>();
@@ -99,6 +100,9 @@ public class TradeOfferScriptableObject : ScriptableObject
         return Resource;
     }
 
+    /*
+        Randomly generates a resource quantity based on trade quality
+    */
     private int GenerateQuantity(TRADE_QUALITY Quality)
     {
         int Quantity = 0;
@@ -121,6 +125,9 @@ public class TradeOfferScriptableObject : ScriptableObject
         return Quantity;
     }
 
+    /*
+        Generates a requested resource for a trade offer.
+    */
     private ResourceScriptableObject GenerateRequestedResource(TRADE_QUALITY Quality, ResourceScriptableObject Resource, List<ResourceScriptableObject> PlayerResources)
     {
         Resource = PlayerResources[UnityEngine.Random.Range(0, PlayerResources.Count)];
@@ -128,6 +135,9 @@ public class TradeOfferScriptableObject : ScriptableObject
         return Resource;
     }
 
+    /*
+        Generates an offered resource for a trade offer.
+    */
     private ResourceScriptableObject GenerateOfferedResource(TRADE_QUALITY Quality, ResourceScriptableObject Resource)
     {
         ResourceScriptableObject.RESOURCE ResourceType;
@@ -165,11 +175,14 @@ public class TradeOfferScriptableObject : ScriptableObject
         }
         return Resource;
     }
-    // Generate Requested resource type   
-    // Generate requested resource quantity
-    // Generate offered resource type
-    // Generate offered resource quantity.
 
+    /*
+    Funcion responsible for managing the transaction which takes place when agreeing to a trade offer.
+    ExecuteTradeTransaction is supposed to manage the transaction of resources between merchant and player 
+    Currently something seems to go wrong with the resource quantity values. and the resource scriptable objects are overwriting eachother instead of modifying eachothers variables.
+    TO-DO: Fix transaction system.
+    */
+   
     public List<ResourceScriptableObject> AcceptTradeOffer(List<ResourceScriptableObject> PlayerResources)
     {
 
@@ -177,19 +190,22 @@ public class TradeOfferScriptableObject : ScriptableObject
 
         foreach (ResourceScriptableObject PlayerResource in PlayerResources)
         {
+            
+            //Remove resources requested from player
             if (PlayerResource.ResourceName == ResourcesRequested.ResourceName && PlayerResource.ResourceQuantity >= ResourcesRequested.ResourceQuantity)
             {
-                //Remove resources requested from player
                 PlayerResource.ResourceQuantity = PlayerResource.ResourceQuantity - ResourcesRequested.ResourceQuantity;
             }
 
+            //Add Resources offered to player 
             if (PlayerResource.ResourceName == ResourcesOffered.ResourceName)
             {
-                //Add Resources offered to player 
+                
                 PlayerResource.ResourceQuantity = PlayerResource.ResourceQuantity + ResourcesOffered.ResourceQuantity;
                 OfferTransactionCompleted = true;
             }
 
+            //Adds resource to resource list if player does not have resource yet.
             if(ResourcesOffered.ResourceQuantity > 0 && OfferTransactionCompleted)
             {
                 PlayerResources.Add(ResourcesOffered);

@@ -7,61 +7,60 @@ using UnityEngine.UI;
 public class CoreGameManager : MonoBehaviour
 {
 
-    public Console Console;
-    public TradeGameManager TradeManager;
-    public int CurrentTurn;
-    public List<float> PhaseDurationArray = new List<float>();
-    public List<KeyCode> SelectionInputOptions = new List<KeyCode>();
-    public int CoinBalance;
-    public float InputCooldown;
+    public Console Console; //Reference to the Text Console which prints messages to the player
+    public TradeGameManager TradeManager; //Reference to the trade manager component. Handles generation of trade offers and supporting elements
+    public int CurrentTurn; // current player turn.
+    public List<float> PhaseDurationArray = new List<float>(); //Publicly adjustable list of the number and duration of phases.
+    public List<KeyCode> SelectionInputOptions = new List<KeyCode>(); //Container for potential keys to be used to interact with systems
+    public int CoinBalance; //Number of coins the player has
+    public float InputCooldown; // Cooldown before individual input actions can take place.
 
 
     private int CurrentPhase;
     //0 = Contract, 1 = Trade, 2 = Order, 3 = End
-    private bool bPhaseInProgress;
-    private int TotalTurns;
-    private float PhaseTimer;
-    private float InputTimer;
+    private bool bPhaseInProgress; //Checks whether phase is currently progressing.
+    private int TotalTurns; //Measures total number of turns that have passed.
+    private float PhaseTimer; //Tracks time of phase.
+    private float InputTimer; //Tracks time since last input.
 
-    private KeyCode TradeKey = KeyCode.X;
-    //Write function to generate, get and set keycode later
-
-
-
-    private List<ResourceScriptableObject> PlayerResources = new List<ResourceScriptableObject>();
-    private TradeOfferScriptableObject Offer;
-    private TradeOfferScriptableObject Request;
-
-
-    //Phase and turn management: Turn Counter, phase enumerator, timer and time tracking
-    //Player Interaction Management: Input detection, Bind event to input 
-    //Feedback Management: Send text to console, enable/disable ui and audio
-    //Score Management: Coin variable, Debt variable, 'resource' counters
+    private KeyCode TradeKey = KeyCode.X; //Holds the key to interact with the active trade. TradeKey should be generated using a function/
 
 
 
-    // Start is called before the first frame update
+    private List<ResourceScriptableObject> PlayerResources = new List<ResourceScriptableObject>(); //List of player resources
+    private TradeOfferScriptableObject Offer; //Reference to current trade offer
+
+
+
+    /*
+        The start sequence should run an event which introduces the player to the world and the goal.
+        Currently this event is a timer based prompt, user would like this to become button press event. Change StartGame function to phase -1 in turn 0.
+        Start() only sets bphaseinprogress - false, current phase to -1, and turn to 0. StartGame() than runs in phase update and check player input.
+
+        Develop a function in the console which toggles the scrolling instead of a timer based system.
+    */
     void Start()
     {
 
         bPhaseInProgress = false;
         InitializePlayerResources();
         Console.LogScrollSpeed = 3;
-        //GameStartEvent
-        //initializeplayer
         StartCoroutine(StartGame());
         CurrentPhase = -1;
         InputTimer = InputCooldown;
 
     }
 
-    // Update is called once per frame
+
     void Update()
     {
-        PhaseUpdate();
-        CheckPlayerInput();
-    }
-
+        PhaseUpdate();  
+        CheckPlayerInput(); 
+    }  
+        
+    /*
+    Phase Update Manages the progression of phases .
+    */
     private void PhaseUpdate()
     {
         if (bPhaseInProgress)
@@ -75,13 +74,16 @@ public class CoreGameManager : MonoBehaviour
         }
     }
 
-
+    /*
+    EndCurrentPhase Communicates a phase has ended, 
+    determines whether to start a next phase, 
+    or to end the turn and reset phases.
+    */
     private void EndCurrentPhase()
     {
         bPhaseInProgress = false;
-        Console.PrintToConsole("Phase: " + CurrentPhase + " Has Ended.");
-        //ResolveCurrentPhase;
-        //FeedbackUpdate
+        ResolveCurrentPhase();
+        
 
         if (CurrentPhase < 3)
         {
@@ -95,6 +97,24 @@ public class CoreGameManager : MonoBehaviour
         }
     }
 
+    /*
+    Start Phase determines which phase to initiate based on the phase variable. 
+    It then sets the phase time to the appropriately assigned duration. 
+    It also starts the phase timer
+
+    Contract Phase:
+    Player is offered a selection of 'resources' to deliver within a certain number of 'turns' to receive 'resources'
+    
+    Trade Phase:
+    Player can directly trade a selection of 'resources' for a selection of other 'resources
+
+    Order Phase:
+    Plauer is offered a selection of 'resources' in a number of 'turns', in return for a selection of their 'resources' now.
+
+    End Phase:
+    Debt Collector takes % of remaining debt interest in coins.
+    if < x Game Over.
+    */
     private void StartPhase(int phase)
     {
         Console.PrintToConsole("Starting Phase: " + phase);
@@ -119,18 +139,33 @@ public class CoreGameManager : MonoBehaviour
 
     }
 
+    /*
+        Ends the current phase and executes any functions which have to be fired at the end of a phase.
+    */
+    private void ResolveCurrentPhase()
+    {
+        Console.PrintToConsole("Phase: " + CurrentPhase + " Has Ended.");
+    }
 
+    /*
+        Ends the current turn and resets the phase.
+        // TO-DO: ResolveTurn
+        // TO-DO: Feedback / Score Card
+        // Startt phase 0 of next turn.
+    */
     private void EndCurrentTurn()
     {
-        // ResolveTurn
-        // Feedback / Score Card
         CurrentPhase = 0;
         Console.PrintToConsole("End of turn: " + CurrentTurn);
         CurrentTurn += 1;
         StartPhase(CurrentPhase);
     }
 
-
+    /*
+    If a phase is in progress, check player input waits to receive any of the phase valid input options.
+    At all times, check player input waits to receive space bar input to end the current phase.
+    Check player input may be transfered to a seperate object which will handle this gameplay, along with any control assignment functions.
+    */
     private void CheckPlayerInput()
     {
         if (bPhaseInProgress)
@@ -139,27 +174,25 @@ public class CoreGameManager : MonoBehaviour
             switch (CurrentPhase)
             {
                 case 0:
-                    // Generate key bindings for contracts
-                    // foreach contract in TotalContracts
-                    // SelectionInputOptions[rand(0,3)] = Offer.AcceptContract();
+                    // Contract Phase
+
                     break;
                 case 1:
-                    // Generate key bindings for trade
+                    // TradePhase
+
                     if (Input.GetKeyDown(TradeKey) && InputTimer <= 0)
                     {
                         ExecuteTradeTransaction();
                     }
 
-
-                    // SelectionInputOptions[rand(0,3)] = Trade.AcceptTrade();
                     break;
                 case 2:
-                    // Generate key bindings for trade
-                    // foreach orders in TotalOrders
-                    // SelectionInputOptions[rand(0,3)] = Order.AcceptOrder();
+                    // Order Phase
+
                     break;
                 case 3:
-                    // disable input during end phase.
+                    // End Phase
+
                     break;
             }
 
@@ -172,6 +205,9 @@ public class CoreGameManager : MonoBehaviour
         }
     }
 
+    /*
+        Prints the contents of the playerResources list to the console
+    */
     private void PrintPlayerResources()
     {
         Console.PrintToConsole("You now have the following resources:" + "\n");
@@ -181,6 +217,9 @@ public class CoreGameManager : MonoBehaviour
         }
     }
 
+    /*
+        Initializes the player with a certain amount of resources when the game starts.
+    */
     private void InitializePlayerResources()
     {
 
@@ -194,6 +233,14 @@ public class CoreGameManager : MonoBehaviour
 
     }
 
+
+    /*
+        The start sequence should run an event which introduces the player to the world and the goal.
+        Currently this event is a timer based prompt, user would like this to become button press event. Change StartGame function to phase -1 in turn 0.
+        Start() only sets bphaseinprogress - false, current phase to -1, and turn to 0. StartGame() than runs in phase update and check player input.
+
+        Develop a function in the console which toggles the scrolling instead of a timer based system.
+    */
     private IEnumerator StartGame()
     {
 
@@ -218,7 +265,12 @@ public class CoreGameManager : MonoBehaviour
 
     }
 
-
+    /*
+    InitializeTradePhase Generates a trade offer and trade key, it then communicates the offer information to the player.
+        TO-DO: transfer most code to trade manager.
+        TO-DO: Generate multiple trade offers effectively
+        TO-DO: Visualize Trade Offers Using Interface.
+    */
     private void InitializeTradePhase()
     {
         Console.PrintToConsole("Time to trade! \n");
@@ -233,6 +285,12 @@ public class CoreGameManager : MonoBehaviour
 
     }
 
+
+    /*
+        ExecuteTradeTransaction is supposed to manage the transaction of resources between merchant and player 
+        Currently something seems to go wrong with the resource quantity values. and the resource scriptable objects are overwriting eachother instead of modifying eachothers variables.
+            TO-DO: Fix transaction system.
+    */
     private void ExecuteTradeTransaction()
     {
         print(Offer);
@@ -248,10 +306,10 @@ public class CoreGameManager : MonoBehaviour
         ScriptableObject.Destroy(Offer);
     }
 
-
-
-
-
+    /*
+        Initializes the End Phase which executes debt collection, and
+        TO-DO: the final turn score-card communicates critical game information.
+    */
     private void InitializeEndOfDay()
     {
         Console.PrintToConsole("The Day has come to an end, The debt collector takes his cut \n");
@@ -267,11 +325,23 @@ public class CoreGameManager : MonoBehaviour
         }
     }
 
+    /*
+    Initialize Contract Phase 
+    TO-DO: generate new contract offers
+    TO-DO: generate contract keys
+    TO-DO: Display contract offer
+    */
     private void InitializeContractPhase()
     {
         Console.PrintToConsole("New Contract Offers have Arrived. \n This phase is currently not functional");
     }
 
+    /*
+    Initialize Order Phase 
+    TO-DO: generate new Order offers
+    TO-DO: generate Order Keys
+    TO-DO: Display Order Offers
+    */
     private void InitializeOrderPhase()
     {
         Console.PrintToConsole("A few orders became available. \n This phase is currently not functional \n");

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TradeGameManager : MonoBehaviour
 {
-    private KeyCode TradeKey;
+    private KeyCode TradeKey; //used to generate a randomised key for trade offers. May be combined for each mechanic and added to seperate input manager later.
 
     // Start is called before the first frame update
     void Start()
@@ -18,7 +18,9 @@ public class TradeGameManager : MonoBehaviour
         
     }
 
-
+    /*
+        Generates a number of trade offers depending on the number of merchants that spawned this turn
+    */
     public List<TradeOfferScriptableObject> GenerateTotalTrades(int turn, List<ResourceScriptableObject> PlayerResources)
     {
         
@@ -37,7 +39,10 @@ public class TradeGameManager : MonoBehaviour
         return Trades;
     }
 
-
+    /*
+    Generates a single trade offer objects
+    Player can directly trade a selection of 'resources' for a selection of other 'resources'
+    */
     public TradeOfferScriptableObject GenerateTradeOffer(int turn, List<ResourceScriptableObject> PlayerResources)
     {        
         TradeOfferScriptableObject Offer = ScriptableObject.CreateInstance<TradeOfferScriptableObject>();
@@ -49,6 +54,7 @@ public class TradeGameManager : MonoBehaviour
         return Offer;
     }
 
+    //used to generate a randomised key for trade offers. May be combined for each mechanic and added to seperate input manager later.
     public KeyCode GenerateTradeKey()
     {
 
