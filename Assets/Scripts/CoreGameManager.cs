@@ -23,7 +23,8 @@ public class CoreGameManager : MonoBehaviour
     private float PhaseTimer;
     private float InputTimer;
 
-    private KeyCode TradeKey = KeyCode.X; //Write function to generate, get and set keycode later
+    private KeyCode TradeKey = KeyCode.X;
+    //Write function to generate, get and set keycode later
 
 
 
@@ -51,7 +52,6 @@ public class CoreGameManager : MonoBehaviour
         StartCoroutine(StartGame());
         CurrentPhase = -1;
         InputTimer = InputCooldown;
-
 
     }
 
@@ -101,36 +101,16 @@ public class CoreGameManager : MonoBehaviour
         switch (phase)
         {
             case 0:
-                Console.PrintToConsole("New Contract Offers have Arrived. \n This phase is currently not functional");
+                InitializeContractPhase();
                 break;
             case 1:
-                Console.PrintToConsole("Time to trade! \n");
-                print(TradeManager);
-                Console.LogScrollSpeed = 3;
-
-                Offer = TradeManager.GenerateTradeOffer();
-                TradeKey = TradeManager.GenerateTradeKey();
-
-                Console.PrintToConsole("The astute " + Offer.MerchantName + ", Requests a grand total of: " + Offer.ResourcesRequested.ResourceQuantity + ", of your " + Offer.ResourcesRequested.ResourceName + "\n");
-                Console.PrintToConsole("In Exchange for their: " + Offer.ResourcesOffered.ResourceQuantity + " " + Offer.ResourcesOffered.ResourceName + "\n");
-                Console.PrintToConsole("Too Agree with this offer, Press: " + TradeKey.ToString());
-
+                InitializeTradePhase();
                 break;
             case 2:
-                Console.PrintToConsole("A few orders became available. \n This phase is currently not functional \n");
+                InitializeOrderPhase();
                 break;
             case 3:
-                Console.PrintToConsole("The Day has come to an end, The debt collector takes his cut \n");
-                foreach (ResourceScriptableObject resource in PlayerResources)
-                {
-                    int debt = 1;
-                    if (resource.ResourceName == "Coin")
-                    {
-                        resource.ResourceQuantity = resource.ResourceQuantity - debt;
-                        Console.PrintToConsole("He takes: " + debt + " " + resource.ResourceName + " As his payment. \n");
-                        PrintPlayerResources();
-                    }
-                }
+                InitializeEndOfDay();
                 break;
         }
 
@@ -167,14 +147,7 @@ public class CoreGameManager : MonoBehaviour
                     // Generate key bindings for trade
                     if (Input.GetKeyDown(TradeKey) && InputTimer <= 0)
                     {
-                        print(Offer);
-                        print(Offer.ResourcesOffered.ResourceName + Offer.ResourcesOffered.ResourceQuantity);
-                        print(Offer.ResourcesRequested.ResourceName + Offer.ResourcesRequested.ResourceQuantity);
-                        List<ResourceScriptableObject> NewPlayerResources = Offer.AcceptTradeOffer(PlayerResources);
-                        PlayerResources = NewPlayerResources;
-                        Console.PrintToConsole("You Accepted the merchants offer!" + "\n");
-                        PrintPlayerResources();
-                        ScriptableObject.Destroy(Offer);
+                        ExecuteTradeTransaction();
                     }
 
 
@@ -223,6 +196,8 @@ public class CoreGameManager : MonoBehaviour
 
     private IEnumerator StartGame()
     {
+
+        //Startgame requires rewrite as game phase and should toggle through a loop of strings which the player can progress using space bar.
         Console.PrintToConsole("Starting Game");
         Console.LogScrollSpeed = 3;
         Console.PrintToConsole("Thank you for playing the first playable version River of Coin. \n ");
@@ -244,11 +219,63 @@ public class CoreGameManager : MonoBehaviour
     }
 
 
+    private void InitializeTradePhase()
+    {
+        Console.PrintToConsole("Time to trade! \n");
+        Console.LogScrollSpeed = 3;
+
+        Offer = TradeManager.GenerateTradeOffer(CurrentTurn, PlayerResources);
+        TradeKey = TradeManager.GenerateTradeKey();
+
+        Console.PrintToConsole("The astute " + Offer.MerchantName + ", Requests a grand total of: " + Offer.ResourcesRequested.ResourceQuantity + ", of your " + Offer.ResourcesRequested.ResourceName + "\n");
+        Console.PrintToConsole("In Exchange for their: " + Offer.ResourcesOffered.ResourceQuantity + " " + Offer.ResourcesOffered.ResourceName + "\n");
+        Console.PrintToConsole("Too Agree with this offer, Press: " + TradeKey.ToString());
+
+    }
+
+    private void ExecuteTradeTransaction()
+    {
+        print(Offer);
+        print(Offer.ResourcesOffered.ResourceName + Offer.ResourcesOffered.ResourceQuantity);
+        print(Offer.ResourcesRequested.ResourceName + Offer.ResourcesRequested.ResourceQuantity); 
+
+        List<ResourceScriptableObject> NewPlayerResources = Offer.AcceptTradeOffer(PlayerResources);
+        PlayerResources = NewPlayerResources;
+
+        Console.PrintToConsole("You Accepted the merchants offer!" + "\n");
+        PrintPlayerResources();
+
+        ScriptableObject.Destroy(Offer);
+    }
 
 
 
 
 
+    private void InitializeEndOfDay()
+    {
+        Console.PrintToConsole("The Day has come to an end, The debt collector takes his cut \n");
+        foreach (ResourceScriptableObject resource in PlayerResources)
+        {
+            int debt = 1;
+            if (resource.ResourceName == "Coin")
+            {
+                resource.ResourceQuantity = resource.ResourceQuantity - debt;
+                Console.PrintToConsole("He takes: " + debt + " " + resource.ResourceName + " As his payment. \n");
+                PrintPlayerResources();
+            }
+        }
+    }
+
+    private void InitializeContractPhase()
+    {
+        Console.PrintToConsole("New Contract Offers have Arrived. \n This phase is currently not functional");
+    }
+
+    private void InitializeOrderPhase()
+    {
+        Console.PrintToConsole("A few orders became available. \n This phase is currently not functional \n");
+    }
 
 
 

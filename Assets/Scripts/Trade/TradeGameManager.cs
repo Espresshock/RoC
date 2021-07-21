@@ -19,7 +19,7 @@ public class TradeGameManager : MonoBehaviour
     }
 
 
-    public List<TradeOfferScriptableObject> GenerateTotalTrades()
+    public List<TradeOfferScriptableObject> GenerateTotalTrades(int turn, List<ResourceScriptableObject> PlayerResources)
     {
         
         List<TradeOfferScriptableObject> Trades = new List<TradeOfferScriptableObject>();
@@ -30,7 +30,7 @@ public class TradeGameManager : MonoBehaviour
         for(int i = 0; i <= NumberOfMerchants; i++)
         {
             //Generate 'Trade Offer' for each merchant instance
-            Trades.Add(GenerateTradeOffer());
+            Trades.Add(GenerateTradeOffer(turn, PlayerResources));
         }
         
         //return trade offers
@@ -38,16 +38,14 @@ public class TradeGameManager : MonoBehaviour
     }
 
 
-    public TradeOfferScriptableObject GenerateTradeOffer()
-    {
-        ResourceScriptableObject RequestedResource = ScriptableObject.CreateInstance<ResourceScriptableObject>();
-        ResourceScriptableObject OfferedResource = ScriptableObject.CreateInstance<ResourceScriptableObject>();
-        
+    public TradeOfferScriptableObject GenerateTradeOffer(int turn, List<ResourceScriptableObject> PlayerResources)
+    {        
         TradeOfferScriptableObject Offer = ScriptableObject.CreateInstance<TradeOfferScriptableObject>();
 
-        Offer.CreateTradeOffer(Offer, "", TradeOfferScriptableObject.TRADE_QUALITY.BAD);
-        Offer.ResourcesRequested = RequestedResource.SetResource(RequestedResource, ResourceScriptableObject.RESOURCE.COIN, 1);
-        Offer.ResourcesOffered = OfferedResource.SetResource(OfferedResource, ResourceScriptableObject.RESOURCE.SCRAP, 1);
+        Offer = Offer.CreateTradeOffer(Offer, "", turn); 
+        Offer.ResourcesRequested = Offer.GenerateResource(Offer.GenerateTradeQuality(turn), true, PlayerResources);
+        Offer.ResourcesOffered = Offer.GenerateResource(Offer.GenerateTradeQuality(turn), false, PlayerResources);
+        
         return Offer;
     }
 

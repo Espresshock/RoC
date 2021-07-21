@@ -23,7 +23,7 @@ public class ResourceScriptableObject : ScriptableObject
         return Object;
     }
     
-    RESOURCE NameResource(RESOURCE Resource)
+    public RESOURCE NameResource(RESOURCE Resource)
     {
         switch(Resource){
             case RESOURCE.COIN:
@@ -47,7 +47,4 @@ public class ResourceScriptableObject : ScriptableObject
         }
         return Resource;
     }
-    
-
-
 }
