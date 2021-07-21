@@ -23,6 +23,9 @@ public class CoreGameManager : MonoBehaviour
     private float PhaseTimer; //Tracks time of phase.
     private float InputTimer; //Tracks time since last input.
 
+    private int StartGamePhase;
+    private bool SpaceIsPressed;
+
     private KeyCode TradeKey = KeyCode.X; //Holds the key to interact with the active trade. TradeKey should be generated using a function/
 
 
@@ -41,13 +44,13 @@ public class CoreGameManager : MonoBehaviour
     */
     void Start()
     {
-
+        StartGamePhase = 0;
         bPhaseInProgress = false;
-        InitializePlayerResources();
-        Console.LogScrollSpeed = 3;
-        StartCoroutine(StartGame());
-        CurrentPhase = -1;
+        CurrentPhase = -1;        
         InputTimer = InputCooldown;
+        Console.PrintToConsole("Starting Game");
+        StartGame();
+        Console.LogScrollSpeed = 3;
 
     }
 
@@ -196,12 +199,20 @@ public class CoreGameManager : MonoBehaviour
                     break;
             }
 
-            if (Input.GetKeyDown(KeyCode.Space) && InputTimer <= 0)
+            if (Input.GetKeyDown(KeyCode.Space) && InputTimer <= 0 && bPhaseInProgress)
             {
                 print(InputTimer);
                 EndCurrentPhase();
                 InputTimer = InputCooldown;
             }
+        }
+        else
+        {
+            if(Input.GetKeyDown(KeyCode.Space) && StartGamePhase < 6)
+                {
+                    StartGame();
+                    InputTimer = InputCooldown;
+                }
         }
     }
 
@@ -241,28 +252,39 @@ public class CoreGameManager : MonoBehaviour
 
         Develop a function in the console which toggles the scrolling instead of a timer based system.
     */
-    private IEnumerator StartGame()
+    private void StartGame()
     {
-
         //Startgame requires rewrite as game phase and should toggle through a loop of strings which the player can progress using space bar.
-        Console.PrintToConsole("Starting Game");
-        Console.LogScrollSpeed = 3;
-        Console.PrintToConsole("Thank you for playing the first playable version River of Coin. \n ");
-        yield return new WaitForSeconds(3);
-        Console.PrintToConsole("This game is Katelyst's entry in the RNDGAME JAM II. \n \n");
-        yield return new WaitForSeconds(3);
-        Console.PrintToConsole("The River of Coin is home to a vast variety of traders, savy merchants, and customers. \n");
-        yield return new WaitForSeconds(3);
-        Console.PrintToConsole("Reeti Recently bought a shop with the ambition of ascending up the river of coin, You can help by managing some of the day to day tasks.\n");
-        yield return new WaitForSeconds(5);
-        Console.PrintToConsole("Please reach out with any comments, we are excited to hear what you think! \n The game is currently limited in functionality, but aims to depict some core ideas. \n The Game loop will Start in a few seconds.");
-        yield return new WaitForSeconds(5);
-        Console.PrintToConsole("You can Press Space Bar to skip through phases. or wait for them to pass");
-        yield return new WaitForSeconds(10);
-        Console.LogScrollSpeed = 1;
-        PhaseTimer = 10;
-        bPhaseInProgress = true;
-
+        
+        if(StartGamePhase == 0)
+            {
+                Console.PrintToConsole("Thank you for playing the first playable version River of Coin. \n ");
+                Console.PrintToConsole("You can Press Space Bar to continue");
+            }
+        if(StartGamePhase == 1)
+            {
+                Console.PrintToConsole("This game is Katelyst's entry in the RNDGAME JAM II. \n \n");
+            }
+        if(StartGamePhase == 2)
+            {
+                Console.PrintToConsole("The River of Coin is home to a vast variety of traders, savy merchants, and customers. \n");
+            }
+         if(StartGamePhase == 3)
+            {
+                Console.PrintToConsole("Reeti Recently bought a shop with the ambition of ascending up the river of coin, You can help by managing some of the day to day tasks.\n");
+            }
+        if(StartGamePhase == 4)
+            {
+                Console.PrintToConsole("Please reach out with any comments, we are excited to hear what you think! \n The game is currently limited in functionality, but aims to depict some core ideas. \n ");
+            }
+        if(StartGamePhase == 5)
+            {
+                Console.PrintToConsole("The Game loop will Start in a few seconds.");
+                PhaseTimer = 10;
+                InitializePlayerResources();
+                bPhaseInProgress = true;
+            }       
+        StartGamePhase++;
     }
 
     /*

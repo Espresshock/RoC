@@ -209,6 +209,7 @@ public class TradeOfferScriptableObject : ScriptableObject
             if(ResourcesOffered.ResourceQuantity > 0 && OfferTransactionCompleted)
             {
                 PlayerResources.Add(ResourcesOffered);
+                break;
             }
         }
 
