@@ -16,7 +16,7 @@ public class CoreGameManager : MonoBehaviour
     public float InputCooldown; // Cooldown before individual input actions can take place.
 
 
-    private int CurrentPhase;
+    public int CurrentPhase;
     //0 = Contract, 1 = Trade, 2 = Order, 3 = End
     private bool bPhaseInProgress; //Checks whether phase is currently progressing.
     private int TotalTurns; //Measures total number of turns that have passed.

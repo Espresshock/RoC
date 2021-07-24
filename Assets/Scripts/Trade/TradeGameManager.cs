@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TradeGameManager : MonoBehaviour
 {
     private KeyCode TradeKey; //used to generate a randomised key for trade offers. May be combined for each mechanic and added to seperate input manager later.
+
+    public Card CardPrefab;
 
     // Start is called before the first frame update
     void Start()
@@ -51,6 +54,13 @@ public class TradeGameManager : MonoBehaviour
         Offer.ResourcesRequested = Offer.GenerateResource(Offer.GenerateTradeQuality(turn), true, PlayerResources);
         Offer.ResourcesOffered = Offer.GenerateResource(Offer.GenerateTradeQuality(turn), false, PlayerResources);
         
+        Card card;
+        card = Instantiate(CardPrefab, transform.position, transform.rotation);
+        card.transform.SetParent(this.transform, false);
+
+        card = card.CreateCard(card, Offer);
+        
+
         return Offer;
     }
 

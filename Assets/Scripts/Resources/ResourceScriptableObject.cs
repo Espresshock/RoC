@@ -1,15 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public class ResourceScriptableObject : ScriptableObject
 {
 
     public string ResourceName; //Name of resource
+    public Texture2D ResourceIcon;
 
     //private int ResourceValue;
 
-    public enum RESOURCE {COIN, CRYSTAL, MATERIALS, METAL_NUGGET, CRYSTAL_FRAGMENT, SCRAP}; // recource type
+    public enum RESOURCE {COIN, SCRAP, SHINY}; // recource type
     public int ResourceQuantity;    // number of resources held by this object
     
 
@@ -31,23 +33,30 @@ public class ResourceScriptableObject : ScriptableObject
         switch(Resource){
             case RESOURCE.COIN:
                 ResourceName = "Coin";
-                break;
-            case RESOURCE.CRYSTAL:
-                ResourceName = "Crystal";
-                break;
-            case RESOURCE.MATERIALS:
-                ResourceName = "Materials";
-                break;
-            case RESOURCE.METAL_NUGGET:
-                ResourceName = "Metal Nugget";
-                break;
-            case RESOURCE.CRYSTAL_FRAGMENT:
-                ResourceName = "Crystal Fragment";
+                ResourceIcon = LoadPNG("Assets/Art Assets/ResourceArt/material_122.png");
                 break;
             case RESOURCE.SCRAP:
                 ResourceName = "Scrap";
+                ResourceIcon = LoadPNG("Assets/Art Assets/ResourceArt/material_11.png");
+                break;
+            case RESOURCE.SHINY:
+                ResourceName = "Shiny";
+                ResourceIcon = LoadPNG("Assets/Art Assets/ResourceArt/material_08.png");
                 break;
         }
         return Resource;
+    }
+
+    private static Texture2D LoadPNG(string filePath) {
+ 
+     Texture2D tex = null;
+     byte[] fileData;
+ 
+     if (File.Exists(filePath))     {
+         fileData = File.ReadAllBytes(filePath);
+         tex = new Texture2D(2, 2);
+         tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
+     }
+     return tex;
     }
 }

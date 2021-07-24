@@ -150,14 +150,14 @@ public class TradeOfferScriptableObject : ScriptableObject
                 }
                 else
                 {
-                    ResourceType = ResourceScriptableObject.RESOURCE.METAL_NUGGET;
+                    ResourceType = ResourceScriptableObject.RESOURCE.COIN;
                 }
                 Resource.SetResource(Resource, ResourceType, GenerateQuantity(Quality));
                 break;
             case TRADE_QUALITY.FAIR:
                 if (UnityEngine.Random.Range(0, 1) == 0)
                 {
-                    ResourceType = ResourceScriptableObject.RESOURCE.CRYSTAL_FRAGMENT;
+                    ResourceType = ResourceScriptableObject.RESOURCE.SHINY;
                 }
                 else
                 {
