@@ -7,7 +7,9 @@ public class TradeGameManager : MonoBehaviour
 {
     private KeyCode TradeKey; //used to generate a randomised key for trade offers. May be combined for each mechanic and added to seperate input manager later.
 
-    public Card CardPrefab;
+    public Card CardScriptReference;
+
+    private Card CardReference;
 
     // Start is called before the first frame update
     void Start()
@@ -30,7 +32,7 @@ public class TradeGameManager : MonoBehaviour
         List<TradeOfferScriptableObject> Trades = new List<TradeOfferScriptableObject>();
         
         //Generate Number of merchant instances to spawn
-        int NumberOfMerchants= Random.Range(1,3);
+        int NumberOfMerchants = 2;
         
         for(int i = 0; i <= NumberOfMerchants; i++)
         {
@@ -53,15 +55,27 @@ public class TradeGameManager : MonoBehaviour
         Offer = Offer.CreateTradeOffer(Offer, "", turn); 
         Offer.ResourcesRequested = Offer.GenerateResource(Offer.GenerateTradeQuality(turn), true, PlayerResources);
         Offer.ResourcesOffered = Offer.GenerateResource(Offer.GenerateTradeQuality(turn), false, PlayerResources);
+        Offer.TradeKey = GenerateTradeKey();
         
         Card card;
-        card = Instantiate(CardPrefab, transform.position, transform.rotation);
+        card = Instantiate(CardScriptReference, transform.position, transform.rotation);
         card.transform.SetParent(this.transform, false);
 
         card = card.CreateCard(card, Offer);
-        
+        CardReference = card;
 
         return Offer;
+    }
+
+    public Card GetCard()
+    {
+        if(CardReference != null){
+            return CardReference;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     //used to generate a randomised key for trade offers. May be combined for each mechanic and added to seperate input manager later.

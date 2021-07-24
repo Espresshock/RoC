@@ -297,13 +297,17 @@ public class CoreGameManager : MonoBehaviour
     {
         Console.PrintToConsole("Time to trade! \n");
         Console.LogScrollSpeed = 3;
+        List<TradeOfferScriptableObject> OfferList = TradeManager.GenerateTotalTrades(CurrentTurn, PlayerResources);
 
-        Offer = TradeManager.GenerateTradeOffer(CurrentTurn, PlayerResources);
-        TradeKey = TradeManager.GenerateTradeKey();
+        foreach(TradeOfferScriptableObject Offer in OfferList)
+        {
+            Console.PrintToConsole("The astute " + Offer.MerchantName + ", Requests a grand total of: " + Offer.ResourcesRequested.ResourceQuantity + ", of your " + Offer.ResourcesRequested.ResourceName + "\n");
+            Console.PrintToConsole("In Exchange for their: " + Offer.ResourcesOffered.ResourceQuantity + " " + Offer.ResourcesOffered.ResourceName + "\n");
+            Console.PrintToConsole("Too Agree with this offer, Press: " + Offer.TradeKey.ToString());
+            print(Offer.TradeKey);
+        }
 
-        Console.PrintToConsole("The astute " + Offer.MerchantName + ", Requests a grand total of: " + Offer.ResourcesRequested.ResourceQuantity + ", of your " + Offer.ResourcesRequested.ResourceName + "\n");
-        Console.PrintToConsole("In Exchange for their: " + Offer.ResourcesOffered.ResourceQuantity + " " + Offer.ResourcesOffered.ResourceName + "\n");
-        Console.PrintToConsole("Too Agree with this offer, Press: " + TradeKey.ToString());
+        
 
     }
 

@@ -13,6 +13,8 @@ public class TradeOfferScriptableObject : ScriptableObject
     public ResourceScriptableObject ResourcesRequested; //Resource requested by merchant
     public ResourceScriptableObject ResourcesOffered;   // resource offered by merchant
 
+    public KeyCode TradeKey;
+
     /*
         Initializes a new tradeofferobject
     */
