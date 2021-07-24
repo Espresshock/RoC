@@ -26,7 +26,9 @@ public class CoreGameManager : MonoBehaviour
     private int StartGamePhase;
     private bool SpaceIsPressed;
 
-    private KeyCode TradeKey = KeyCode.X; //Holds the key to interact with the active trade. TradeKey should be generated using a function/
+    private KeyCode TradeKey; //Holds the key to interact with the active trade. TradeKey should be generated using a function/
+
+    private List<TradeOfferScriptableObject> OfferList;
 
 
 
@@ -148,6 +150,10 @@ public class CoreGameManager : MonoBehaviour
     private void ResolveCurrentPhase()
     {
         Console.PrintToConsole("Phase: " + CurrentPhase + " Has Ended.");
+        if(OfferList != null)
+        {
+            TradeManager.DestroyRemainingCards();
+        }
     }
 
     /*
@@ -182,11 +188,14 @@ public class CoreGameManager : MonoBehaviour
                     break;
                 case 1:
                     // TradePhase
-
-                    if (Input.GetKeyDown(TradeKey) && InputTimer <= 0)
+                    foreach(TradeOfferScriptableObject Offer in OfferList)
                     {
-                        ExecuteTradeTransaction();
+                        if (Input.GetKeyDown(Offer.TradeKey) && InputTimer <= 0)
+                        {
+                            ExecuteTradeTransaction(Offer);
+                        }
                     }
+                    
 
                     break;
                 case 2:
@@ -297,7 +306,7 @@ public class CoreGameManager : MonoBehaviour
     {
         Console.PrintToConsole("Time to trade! \n");
         Console.LogScrollSpeed = 3;
-        List<TradeOfferScriptableObject> OfferList = TradeManager.GenerateTotalTrades(CurrentTurn, PlayerResources);
+        OfferList = TradeManager.GenerateTotalTrades(CurrentTurn, PlayerResources);
 
         foreach(TradeOfferScriptableObject Offer in OfferList)
         {
@@ -317,19 +326,19 @@ public class CoreGameManager : MonoBehaviour
         Currently something seems to go wrong with the resource quantity values. and the resource scriptable objects are overwriting eachother instead of modifying eachothers variables.
             TO-DO: Fix transaction system.
     */
-    private void ExecuteTradeTransaction()
+    private void ExecuteTradeTransaction(TradeOfferScriptableObject LocalOffer)
     {
-        print(Offer);
-        print(Offer.ResourcesOffered.ResourceName + Offer.ResourcesOffered.ResourceQuantity);
-        print(Offer.ResourcesRequested.ResourceName + Offer.ResourcesRequested.ResourceQuantity); 
+        print(LocalOffer);
+        print(LocalOffer.ResourcesOffered.ResourceName + LocalOffer.ResourcesOffered.ResourceQuantity);
+        print(LocalOffer.ResourcesRequested.ResourceName + LocalOffer.ResourcesRequested.ResourceQuantity); 
 
-        List<ResourceScriptableObject> NewPlayerResources = Offer.AcceptTradeOffer(PlayerResources);
+        List<ResourceScriptableObject> NewPlayerResources = LocalOffer.AcceptTradeOffer(PlayerResources);
         PlayerResources = NewPlayerResources;
 
         Console.PrintToConsole("You Accepted the merchants offer!" + "\n");
         PrintPlayerResources();
 
-        ScriptableObject.Destroy(Offer);
+        TradeManager.DestroyCard(LocalOffer);
     }
 
     /*
