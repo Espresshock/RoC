@@ -7,6 +7,9 @@ TagManager:
   - Card
   - ResourceRequest
   - ResourceOffer
+  - Coin
+  - Scrap
+  - Shiny
   layers:
   - Default
   - TransparentFX

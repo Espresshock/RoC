@@ -30,6 +30,8 @@ public class CoreGameManager : MonoBehaviour
 
     private List<TradeOfferScriptableObject> OfferList;
 
+    private PlayerResourcesInterface ResourceInterfaceReference;
+
 
 
     private List<ResourceScriptableObject> PlayerResources = new List<ResourceScriptableObject>(); //List of player resources
@@ -152,6 +154,7 @@ public class CoreGameManager : MonoBehaviour
         Console.PrintToConsole("Phase: " + CurrentPhase + " Has Ended.");
         if(OfferList != null)
         {
+            ResourceInterfaceReference.UpdateResourceInterface(PlayerResources);
             TradeManager.DestroyRemainingCards();
         }
     }
@@ -250,6 +253,10 @@ public class CoreGameManager : MonoBehaviour
         ResourceScriptableObject StartScrap = ScriptableObject.CreateInstance<ResourceScriptableObject>();
         StartCoin.SetResource(StartScrap, ResourceScriptableObject.RESOURCE.SCRAP, 10);
         PlayerResources.Add(StartScrap);
+
+        ResourceInterfaceReference = GetComponentInChildren<PlayerResourcesInterface>();
+        ResourceInterfaceReference.InitializeResourceInterface();
+        ResourceInterfaceReference.UpdateResourceInterface(PlayerResources);
 
     }
 
