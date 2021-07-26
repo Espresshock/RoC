@@ -20,7 +20,7 @@ public class GameStateMachine : MonoBehaviour
     
     private float PhaseTimer; //Tracks time of phase.
 
-    private Console ConsoleReference;
+    public Console ConsoleReference;
     
 
     public int StartGamePhase;
@@ -28,11 +28,10 @@ public class GameStateMachine : MonoBehaviour
     
     void Start()
     {
-        ConsoleReference = GameManagerReference.Console;
-
-        StartGamePhase = 0;
+                StartGamePhase = 0;
         bPhaseInProgress = false;
         CurrentPhase = 0;
+        
     }
 
     // Update is called once per frame
@@ -83,6 +82,15 @@ public class GameStateMachine : MonoBehaviour
         if(OfferList != null)
         {
             GameManagerReference.ResourceInterfaceReference.UpdateResourceInterface(GameManagerReference.PlayerResources);
+            if(OfferManager.GetCardList().Count > 0)
+            {
+                foreach(Card card in OfferManager.GetCardList())
+                {
+                    OfferManager.GetCardList().Remove(card);
+                    card.DestroyCard();
+                }
+            }
+
             // Destroy cards. TradeManager.DestroyRemainingCards();
         }
     }
@@ -125,12 +133,16 @@ public class GameStateMachine : MonoBehaviour
     {
 
         ResourceScriptableObject StartCoin = ScriptableObject.CreateInstance<ResourceScriptableObject>();
-        StartCoin.SetResource(StartCoin, ResourceScriptableObject.RESOURCE.COIN, 10);
+        StartCoin.SetResource(StartCoin, ResourceScriptableObject.RESOURCE.COIN, 20);
         GameManagerReference.PlayerResources.Add(StartCoin);
 
         ResourceScriptableObject StartScrap = ScriptableObject.CreateInstance<ResourceScriptableObject>();
-        StartCoin.SetResource(StartScrap, ResourceScriptableObject.RESOURCE.SCRAP, 10);
+        StartCoin.SetResource(StartScrap, ResourceScriptableObject.RESOURCE.SCRAP, 5);
         GameManagerReference.PlayerResources.Add(StartScrap);
+
+        ResourceScriptableObject StartShiny = ScriptableObject.CreateInstance<ResourceScriptableObject>();
+        StartCoin.SetResource(StartShiny, ResourceScriptableObject.RESOURCE.SHINY, 2);
+        GameManagerReference.PlayerResources.Add(StartShiny);
 
         if(GameManagerReference.ResourceInterfaceReference == null)
         {
@@ -151,7 +163,7 @@ public class GameStateMachine : MonoBehaviour
     {
         ConsoleReference.PrintToConsole("Time to trade! \n");
         ConsoleReference.LogScrollSpeed = 3;
-        OfferList = OfferManager.GenerateTotalOffers(CurrentTurn, GameManagerReference.PlayerResources);
+        OfferList = OfferManager.GenerateTotalOffers(CurrentTurn);
 
         foreach(OfferScriptableObject Offer in OfferList)
         {
@@ -181,7 +193,11 @@ public class GameStateMachine : MonoBehaviour
 
         ConsoleReference.PrintToConsole("You Accepted the merchants offer!" + "\n");
 
-        Offer.CardReference.DestroyCard();
+        
+        OfferManager.GetCardList().Remove(LocalOffer.CardReference.GetCard());
+        LocalOffer.CardReference.GetCard().DestroyCard();
+
+        GameManagerReference.ResourceInterfaceReference.UpdateResourceInterface(GameManagerReference.PlayerResources);
     }
 
 /*

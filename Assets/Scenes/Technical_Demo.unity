@@ -2423,6 +2423,7 @@ MonoBehaviour:
   CurrentTurn: 0
   OfferList: []
   bPhaseInProgress: 0
+  ConsoleReference: {fileID: 401455137}
   StartGamePhase: 0
 --- !u!4 &1626099130
 Transform:

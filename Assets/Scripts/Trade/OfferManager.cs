@@ -22,7 +22,12 @@ public class OfferManager : MonoBehaviour
         
     }
 
-    public List<OfferScriptableObject> GenerateTotalOffers(int turn, List<ResourceScriptableObject> PlayerResources)
+    public List<Card> GetCardList()
+    {
+        return CardList;
+    }
+
+    public List<OfferScriptableObject> GenerateTotalOffers(int turn)
     {
         
         Offers = new List<OfferScriptableObject>();
@@ -32,24 +37,39 @@ public class OfferManager : MonoBehaviour
         
         for(int i = 0; i <= NumberOfMerchants; i++)
         {
-            OfferScriptableObject Offer = GenerateOffer(turn, PlayerResources);
+            OfferScriptableObject Offer = Offer = GenerateOffer(turn);
             //Generate 'Trade Offer' for each merchant instance
             Offers.Add(Offer);
-            CardList.Add(Offer.GenerateCard(CardScriptReference, Offer, this.gameObject));
         }
         
         //return trade offers
         return Offers;
     }
 
-    private OfferScriptableObject GenerateOffer(int turn, List<ResourceScriptableObject> PlayerResources)
+    private OfferScriptableObject GenerateOffer(int turn)
     {        
         OfferScriptableObject Offer = ScriptableObject.CreateInstance<OfferScriptableObject>();
-
         Offer = Offer.CreateOffer(Offer, "", turn); 
-        Offer.ResourcesRequested = Offer.GenerateResource(Offer.GenerateTradeQuality(turn));
-        Offer.ResourcesOffered = Offer.GenerateResource(Offer.GenerateTradeQuality(turn));
+
+        OfferScriptableObject.OFFER_QUALITY Quality = Offer.GenerateOfferQuality(turn);
+        ResourceScriptableObject Request = ScriptableObject.CreateInstance<ResourceScriptableObject>();
+        Request = Offer.GenerateResource(Quality);
+
+        ResourceScriptableObject offer = ScriptableObject.CreateInstance<ResourceScriptableObject>();
+        offer = Offer.GenerateResource(Quality);
+        if(Request.ResourceQuantity == offer.ResourceQuantity)
+        {
+            offer.ResourceQuantity = offer.ResourceQuantity + 1;
+        }
+
+        Offer.ResourcesRequested = Request;
+        Offer.ResourcesOffered = offer;
+        
         Offer.TradeKey = Offer.GenerateTradeKey();
+
+        Card card;
+        card = Offer.GenerateCard(CardScriptReference, Offer, this.gameObject);
+        CardList.Add(card);
         
         return Offer;
     }

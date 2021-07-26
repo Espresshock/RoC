@@ -23,18 +23,18 @@ public class OfferScriptableObject : ScriptableObject
     public OfferScriptableObject CreateOffer(OfferScriptableObject Offer, string Name, int turn)
     {
         Offer.MerchantName = NameMerchant(Name);
-        Offer.GenerateTradeQuality(turn);
+        Offer.GenerateOfferQuality(turn);
         return Offer;
     } 
 
-    public OfferScriptableObject.OFFER_QUALITY GenerateTradeQuality(int turn)
+    public OfferScriptableObject.OFFER_QUALITY GenerateOfferQuality(int turn)
     {
         OfferScriptableObject.OFFER_QUALITY Quality = OFFER_QUALITY.BAD;
         int QualityGenerator = UnityEngine.Random.Range(0, 10);
 
         if (turn < 3)
         {
-            if (QualityGenerator < 7)
+            if (QualityGenerator < 5)
             {
                 Quality = OFFER_QUALITY.BAD;
             }
@@ -45,15 +45,15 @@ public class OfferScriptableObject : ScriptableObject
         }
         else if (turn >= 3 && turn < 10)
         {
-            if (QualityGenerator < 4)
+            if (QualityGenerator < 3)
             {
                 Quality = OFFER_QUALITY.BAD;
             }
-            else if (QualityGenerator >= 4 && QualityGenerator < 8)
+            else if (QualityGenerator >= 3 && QualityGenerator < 7)
             {
                 Quality = OFFER_QUALITY.FAIR;
             }
-            else if (QualityGenerator > 8)
+            else if (QualityGenerator > 7)
             {
                 Quality = OFFER_QUALITY.GOOD;
             }
@@ -70,7 +70,6 @@ public class OfferScriptableObject : ScriptableObject
     public List<ResourceScriptableObject> AcceptOffer(List<ResourceScriptableObject> PlayerResources)
     {
 
-        bool OfferTransactionCompleted = false;
 
         foreach (ResourceScriptableObject PlayerResource in PlayerResources)
         {
@@ -78,7 +77,7 @@ public class OfferScriptableObject : ScriptableObject
             //Remove resources requested from player
             if (PlayerResource.ResourceName == ResourcesRequested.ResourceName && PlayerResource.ResourceQuantity >= ResourcesRequested.ResourceQuantity)
             {
-                PlayerResource.ResourceQuantity = PlayerResource.ResourceQuantity - ResourcesRequested.ResourceQuantity;
+                PlayerResource.ResourceQuantity = PlayerResource.ResourceQuantity -= ResourcesRequested.ResourceQuantity;
             }
 
             //Add Resources offered to player 
@@ -86,15 +85,9 @@ public class OfferScriptableObject : ScriptableObject
             {
                 
                 PlayerResource.ResourceQuantity = PlayerResource.ResourceQuantity + ResourcesOffered.ResourceQuantity;
-                OfferTransactionCompleted = true;
             }
 
             //Adds resource to resource list if player does not have resource yet.
-            if(ResourcesOffered.ResourceQuantity > 0 && OfferTransactionCompleted)
-            {
-                PlayerResources.Add(ResourcesOffered);
-                break;
-            }
         }
 
         return PlayerResources;
@@ -117,13 +110,7 @@ public class OfferScriptableObject : ScriptableObject
                 break;
         }
 
-        foreach(OfferScriptableObject Offer in Trades)
-        {
-            if(TradeKey == Offer.TradeKey)
-            {
-                TradeKey = KeyCode.V;
-            }
-        }
+        //Rewrite the selection of keycode by checking other offers first.
 
         return TradeKey;
     }
@@ -166,16 +153,16 @@ public class OfferScriptableObject : ScriptableObject
         switch (Quality)
         {
             case OFFER_QUALITY.BAD:
-                Quantity = UnityEngine.Random.Range(1, 1);
-                break;
-            case OFFER_QUALITY.FAIR:
                 Quantity = UnityEngine.Random.Range(1, 2);
                 break;
+            case OFFER_QUALITY.FAIR:
+                Quantity = UnityEngine.Random.Range(2, 3);
+                break;
             case OFFER_QUALITY.GOOD:
-                Quantity = UnityEngine.Random.Range(1, 3);
+                Quantity = UnityEngine.Random.Range(3, 5);
                 break;
             case OFFER_QUALITY.EXCELLENT:
-                Quantity = UnityEngine.Random.Range(2, 4);
+                Quantity = UnityEngine.Random.Range(4, 6);
                 break;
         }
 
@@ -190,7 +177,7 @@ public class OfferScriptableObject : ScriptableObject
         switch (Quality)
         {
             case OFFER_QUALITY.BAD:
-                if (UnityEngine.Random.Range(0, 1) == 0)
+                if (UnityEngine.Random.Range(0, 2) >= 1)
                 {
                     ResourceType = ResourceScriptableObject.RESOURCE.SCRAP;
                 }
@@ -201,7 +188,7 @@ public class OfferScriptableObject : ScriptableObject
                 Resource.SetResource(Resource, ResourceType, GenerateQuantity(Quality));
                 break;
             case OFFER_QUALITY.FAIR:
-                if (UnityEngine.Random.Range(0, 1) == 0)
+                if (UnityEngine.Random.Range(0, 2) >= 1)
                 {
                     ResourceType = ResourceScriptableObject.RESOURCE.SHINY;
                 }
@@ -212,11 +199,26 @@ public class OfferScriptableObject : ScriptableObject
                 Resource.SetResource(Resource, ResourceType, GenerateQuantity(Quality));
                 break;
             case OFFER_QUALITY.GOOD:
-                ResourceType = ResourceScriptableObject.RESOURCE.COIN;
+               if (UnityEngine.Random.Range(0, 2) >= 1)
+                {
+                    ResourceType = ResourceScriptableObject.RESOURCE.SHINY;
+                }
+                else
+                {
+                    ResourceType = ResourceScriptableObject.RESOURCE.COIN;
+                }
                 Resource.SetResource(Resource, ResourceType, GenerateQuantity(Quality));
                 break;
             case OFFER_QUALITY.EXCELLENT:
-
+                if (UnityEngine.Random.Range(0, 2) >= 1)
+                {
+                    ResourceType = ResourceScriptableObject.RESOURCE.SHINY;
+                }
+                else
+                {
+                    ResourceType = ResourceScriptableObject.RESOURCE.SCRAP;
+                }
+                Resource.SetResource(Resource, ResourceType, GenerateQuantity(Quality));
                 break;
         }
         return Resource;

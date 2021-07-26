@@ -135,7 +135,8 @@ public class Card : MonoBehaviour
     */
     public void DestroyCard()
     {
-        DestroyImmediate(ThisCard, true);
+        
+        Destroy(this.gameObject);
     }
 
     
