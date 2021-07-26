@@ -6,13 +6,16 @@ using System.IO;
 
 public class Card : MonoBehaviour
 {
-
+    public Card ThisCard;
+    public OfferScriptableObject ThisOffer;
     public Image CardImage;
     public Image RequestedResourceImage;
     public Image OfferedResourceImage;
 
     public Text RequestedQuantity;
     public Text OfferedQuantity;
+
+    public Text TriggerTurns; // still requires function for generation and assignment of text.
 
 
 
@@ -40,7 +43,7 @@ public class Card : MonoBehaviour
            if(image.CompareTag("Card"))
            {    
                CardImage = image;           
-               switch(GetComponentInParent<CoreGameManager>().CurrentPhase)
+               switch(GetComponentInParent<CoreGameManager>().GameStateMachine.CurrentPhase)
                {
                     case 0:
                         //Contract
@@ -106,12 +109,36 @@ public class Card : MonoBehaviour
         }
     }
 
-    public Card CreateCard(Card card, TradeOfferScriptableObject Offer)
+    public Card CreateCard(Card card, OfferScriptableObject Offer)
     {
+        ThisCard = card;
+        ThisOffer = Offer;
         inititalizeImages(card, Offer.ResourcesRequested, Offer.ResourcesOffered);
         InitializeQuantityText(card, Offer.ResourcesRequested.ResourceQuantity, Offer.ResourcesOffered.ResourceQuantity);
         return this;
     }
+
+    public Card GetCard()
+    {
+        return this;
+    }
+
+    /*
+
+    public void DestroyRemainingCards()
+    {
+        foreach(Card Card in CardList)
+        {
+            Destroy(Card.gameObject);
+        }
+    }
+    */
+    public void DestroyCard()
+    {
+        DestroyImmediate(ThisCard, true);
+    }
+
+    
 
     private static Texture2D LoadPNG(string filePath) {
  

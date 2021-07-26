@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class PlayerResourcesInterface : MonoBehaviour
 {
 
-    private GameObject GameManagerReference;
+    public GameObject GameManagerReference;
 
     private Text CoinText;
     private Text ScrapText;
@@ -16,13 +16,21 @@ public class PlayerResourcesInterface : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GameManagerReference = GetComponentInParent<CoreGameManager>().gameObject;
+    }
+
+    
+
+
+    // Update is called once per frame
+    void Update()
+    {
         
     }
 
     public void InitializeResourceInterface()
     {
-        GameManagerReference = GetComponentInParent<CoreGameManager>().gameObject;
-
+        
         foreach(Text TextObject in this.GetComponentsInChildren<Text>())
         {  
             if(TextObject.tag == "Coin")
@@ -65,9 +73,12 @@ public class PlayerResourcesInterface : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void PrintPlayerResources()
     {
-        
+        GameManagerReference.GetComponent<CoreGameManager>().Console.PrintToConsole("You now have the following resources:" + "\n");
+        foreach (ResourceScriptableObject resource in GameManagerReference.GetComponent<CoreGameManager>().PlayerResources)
+        {
+            GameManagerReference.GetComponent<CoreGameManager>().Console.PrintToConsole("A total of: " + resource.ResourceQuantity + " " + resource.ResourceName);
+        }
     }
 }

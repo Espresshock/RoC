@@ -21,6 +21,21 @@ public class ResourceScriptableObject : ScriptableObject
         ResourceQuantity = Quantity;
     }
 
+    
+
+    private static Texture2D LoadPNG(string filePath) {
+ 
+     Texture2D tex = null;
+     byte[] fileData;
+ 
+     if (File.Exists(filePath))     {
+         fileData = File.ReadAllBytes(filePath);
+         tex = new Texture2D(2, 2);
+         tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
+     }
+     return tex;
+    }
+
     //Allows external actors to set values of attached object
     public ResourceScriptableObject SetResource(ResourceScriptableObject Object, RESOURCE Resource, int Quantity){
         Object.Init(Resource, Quantity);
@@ -45,18 +60,5 @@ public class ResourceScriptableObject : ScriptableObject
                 break;
         }
         return Resource;
-    }
-
-    private static Texture2D LoadPNG(string filePath) {
- 
-     Texture2D tex = null;
-     byte[] fileData;
- 
-     if (File.Exists(filePath))     {
-         fileData = File.ReadAllBytes(filePath);
-         tex = new Texture2D(2, 2);
-         tex.LoadImage(fileData); //..this will auto-resize the texture dimensions.
-     }
-     return tex;
     }
 }
