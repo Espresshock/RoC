@@ -34,9 +34,7 @@ public class Card : MonoBehaviour
 
     private void inititalizeImages(Card card, ResourceScriptableObject Requested, ResourceScriptableObject Offered)
     {
-        Texture2D CardTex = null;
-        Texture2D RequestTex = null;
-        Texture2D OfferTex = null;
+        Sprite CardTex = null;
         foreach(Image image in GetComponentsInChildren<Image>())
         {
             
@@ -47,16 +45,16 @@ public class Card : MonoBehaviour
                {
                     case 0:
                         //Contract
-                        CardTex = LoadPNG("Assets/Art Assets/Cards/Contract-Card.png");
+                        CardTex = Resources.Load<Sprite>("Cards/Contract-Card");
 
                         break;
                    case 1:
                         //Trade
-                         CardTex = LoadPNG("Assets/Art Assets/Cards/Trade-Card.png");
+                         CardTex = Resources.Load<Sprite>("Cards/Trade-Card");
                    break;
                    case 2:
                         //Supply
-                        CardTex = LoadPNG("Assets/Art Assets/Cards/Supply-Card.png");
+                        CardTex = Resources.Load<Sprite>("Cards/Supply-Card");
                         
                    break;
                    case 3:
@@ -69,26 +67,19 @@ public class Card : MonoBehaviour
            else if(image.CompareTag("ResourceRequest"))
            {
                RequestedResourceImage = image;
-               RequestTex = Requested.ResourceIcon;
                //LoadPNG for request resource name.
            }
            else if(image.CompareTag("ResourceOffer"))
            {
                OfferedResourceImage = image;
-               OfferTex = Offered.ResourceIcon;
                //LoadPNG for offer resource name.
            }
         }
 
-        if(CardTex != null)
-        {
-            card.CardImage.GetComponent<Image>().sprite = Sprite.Create(CardTex, new Rect(0.0f, 0.0f, CardTex.width, CardTex.height), new Vector2(0.5f,0.5f), 180.0f);
-            RequestedResourceImage.GetComponent<Image>().sprite = Sprite.Create(RequestTex, new Rect(0.0f, 0.0f, RequestTex.width, RequestTex.height), new Vector2(0.5f,0.5f), 16.0f);
-            OfferedResourceImage.GetComponent<Image>().sprite = Sprite.Create(OfferTex, new Rect(0.0f, 0.0f, OfferTex.width, OfferTex.height), new Vector2(0.5f,0.5f), 16.0f);
-        }
-        else{
-            print("Could not load texture sprite thingymajig");
-        }
+
+            CardImage.GetComponent<Image>().sprite = CardTex;
+            RequestedResourceImage.GetComponent<Image>().sprite = Requested.ResourceIcon;
+            OfferedResourceImage.GetComponent<Image>().sprite = Offered.ResourceIcon;
 
     }
 

@@ -7,7 +7,7 @@ public class ResourceScriptableObject : ScriptableObject
 {
 
     public string ResourceName; //Name of resource
-    public Texture2D ResourceIcon;
+    public Sprite ResourceIcon;
 
     //private int ResourceValue;
 
@@ -45,18 +45,23 @@ public class ResourceScriptableObject : ScriptableObject
     //Sets resource name based on type
     public RESOURCE NameResource(RESOURCE Resource)
     {
+        Sprite IconTemp;
         switch(Resource){
             case RESOURCE.COIN:
                 ResourceName = "Coin";
-                ResourceIcon = LoadPNG("Assets/Art Assets/ResourceArt/material_122.png");
+                IconTemp = Resources.Load<Sprite>("ResourceArt/material_122");
+                //IconTemp = LoadPNG("Assets/Resources/ResourceArt/material_122.png");
+                ResourceIcon = IconTemp;
                 break;
             case RESOURCE.SCRAP:
                 ResourceName = "Scrap";
-                ResourceIcon = LoadPNG("Assets/Art Assets/ResourceArt/material_11.png");
+                IconTemp = Resources.Load<Sprite>("ResourceArt/material_11");
+                //IconTemp = LoadPNG("Assets/Resources/ResourceArt/material_122.png");
+                ResourceIcon = IconTemp;
                 break;
             case RESOURCE.SHINY:
                 ResourceName = "Shiny";
-                ResourceIcon = LoadPNG("Assets/Art Assets/ResourceArt/material_08.png");
+                IconTemp = ResourceIcon = Resources.Load<Sprite>("ResourceArt/material_08");
                 break;
         }
         return Resource;

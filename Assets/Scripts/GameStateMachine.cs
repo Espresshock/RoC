@@ -28,7 +28,6 @@ public class GameStateMachine : MonoBehaviour
     
     void Start()
     {
-                StartGamePhase = 0;
         bPhaseInProgress = false;
         CurrentPhase = 0;
         
@@ -78,7 +77,6 @@ public class GameStateMachine : MonoBehaviour
 
     private void ResolveCurrentPhase()
     {
-        ConsoleReference.PrintToConsole("Phase: " + CurrentPhase + " Has Ended.");
         if(OfferList != null)
         {
             GameManagerReference.ResourceInterfaceReference.UpdateResourceInterface(GameManagerReference.PlayerResources);
@@ -104,7 +102,6 @@ public class GameStateMachine : MonoBehaviour
 
     private void StartPhase(int phase)
     {
-         ConsoleReference.PrintToConsole("Starting Phase: " + phase);
         switch (phase)
         {
             case 0:
@@ -162,15 +159,14 @@ public class GameStateMachine : MonoBehaviour
     private void InitializeTradePhase()
     {
         ConsoleReference.PrintToConsole("Time to trade! \n");
-        ConsoleReference.LogScrollSpeed = 3;
         OfferList = OfferManager.GenerateTotalOffers(CurrentTurn);
 
         foreach(OfferScriptableObject Offer in OfferList)
         {
-            ConsoleReference.PrintToConsole("The astute " + Offer.MerchantName + ", Requests a grand total of: " + Offer.ResourcesRequested.ResourceQuantity + ", of your " + Offer.ResourcesRequested.ResourceName + "\n");
-            ConsoleReference.PrintToConsole("In Exchange for their: " + Offer.ResourcesOffered.ResourceQuantity + " " + Offer.ResourcesOffered.ResourceName + "\n");
+           // ConsoleReference.PrintToConsole("Merchant Requests a total of: " + Offer.ResourcesRequested.ResourceQuantity + ", of your " + Offer.ResourcesRequested.ResourceName + "\n");
+           //ConsoleReference.PrintToConsole("This in Exchange for their: " + Offer.ResourcesOffered.ResourceQuantity + " " + Offer.ResourcesOffered.ResourceName + "\n");
             ConsoleReference.PrintToConsole("Too Agree with this offer, Press: " + Offer.TradeKey.ToString());
-            print(Offer.TradeKey);
+            //print(Offer.TradeKey);
         }
 
         
@@ -255,7 +251,7 @@ private void InitializeEndOfDay()
         
         if(StartGamePhase == 0)
             {
-                ConsoleReference.PrintToConsole("Thank you for playing the first playable version River of Coin. \n ");
+                ConsoleReference.PrintToConsole("Thank you for playing River of Coin v0.2.5 \n ");
                 ConsoleReference.PrintToConsole("You can Press Space Bar to continue");
             }
         if(StartGamePhase == 1)
@@ -276,7 +272,7 @@ private void InitializeEndOfDay()
             }
         if(StartGamePhase == 5)
             {
-                ConsoleReference.PrintToConsole("The Game loop will Start in a few seconds.");
+                ConsoleReference.PrintToConsole("The Game loop will Start in a few seconds. \n Use z, x, and c to accept different trades!");
                 PhaseTimer = 10;
                 InitializePlayerResources();
                 bPhaseInProgress = true;

@@ -28,7 +28,6 @@ public class CoreGameManager : MonoBehaviour
         
         Console.PrintToConsole("Starting Game");
         GameStateMachine.StartGame();
-        Console.LogScrollSpeed = 3;
 
     }
 
