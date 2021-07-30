@@ -40,6 +40,7 @@ public class OfferManager : MonoBehaviour
             OfferScriptableObject Offer = Offer = GenerateOffer(turn);
             //Generate 'Trade Offer' for each merchant instance
             Offers.Add(Offer);
+            GetComponentInParent<CoreGameManager>().AudioManager.PlayCardSound();
         }
         
         //return trade offers

@@ -22,6 +22,8 @@ public class CoreGameManager : MonoBehaviour
     public PlayerResourcesInterface ResourceInterfaceReference;
 
     public DebtInterface DebtCollector;
+
+    public AudioManager AudioManager;
     
     private int TotalTurns; //Measures total number of turns that have passed.
     

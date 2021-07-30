@@ -161,6 +161,7 @@ public class GameStateMachine : MonoBehaviour
     */
     private void InitializeTradePhase()
     {
+        GameManagerReference.AudioManager.PlayTradePhaseSound();
         ConsoleReference.PrintToConsole("Time to trade! \n");
         OfferList = OfferManager.GenerateTotalOffers(CurrentTurn);
 
@@ -183,6 +184,7 @@ public class GameStateMachine : MonoBehaviour
     */
     public void ExecuteTradeTransaction(OfferScriptableObject LocalOffer)
     {
+        GameManagerReference.AudioManager.PlayCoinSound();
         print(LocalOffer);
         print(LocalOffer.ResourcesOffered.ResourceName + LocalOffer.ResourcesOffered.ResourceQuantity);
         print(LocalOffer.ResourcesRequested.ResourceName + LocalOffer.ResourcesRequested.ResourceQuantity); 
@@ -205,6 +207,7 @@ public class GameStateMachine : MonoBehaviour
     */
 private void InitializeEndOfDay()
     {
+        GameManagerReference.AudioManager.PlayEndOfDaySound();
         int debt = 1;
          //if debt counter reaches 0 win game.
         foreach (ResourceScriptableObject resource in GameManagerReference.PlayerResources)
