@@ -12,6 +12,8 @@ public class GameStateMachine : MonoBehaviour
     public int CurrentPhase; // current player phase
 
     public int CurrentTurn; // current player turn.
+
+    public int CurrentDebt; // current player debt
     public List<OfferScriptableObject> OfferList;
 
     private OfferScriptableObject Offer; //Reference to current trade offer
@@ -82,14 +84,13 @@ public class GameStateMachine : MonoBehaviour
             GameManagerReference.ResourceInterfaceReference.UpdateResourceInterface(GameManagerReference.PlayerResources);
             if(OfferManager.GetCardList().Count > 0)
             {
-                foreach(Card card in OfferManager.GetCardList())
+                for(int i = OfferManager.GetCardList().Count-1; i>= 0; i--)
                 {
-                    OfferManager.GetCardList().Remove(card);
-                    card.DestroyCard();
+                    Card CardToDestroy = OfferManager.GetCardList()[i];
+                    OfferManager.GetCardList().Remove(CardToDestroy);
+                    CardToDestroy.DestroyCard();
                 }
             }
-
-            // Destroy cards. TradeManager.DestroyRemainingCards();
         }
     }
     private void EndCurrentTurn()
@@ -130,8 +131,10 @@ public class GameStateMachine : MonoBehaviour
     {
 
         ResourceScriptableObject StartCoin = ScriptableObject.CreateInstance<ResourceScriptableObject>();
-        StartCoin.SetResource(StartCoin, ResourceScriptableObject.RESOURCE.COIN, 20);
+        StartCoin.SetResource(StartCoin, ResourceScriptableObject.RESOURCE.COIN, 10);
         GameManagerReference.PlayerResources.Add(StartCoin);
+
+        CurrentDebt = 10;
 
         ResourceScriptableObject StartScrap = ScriptableObject.CreateInstance<ResourceScriptableObject>();
         StartCoin.SetResource(StartScrap, ResourceScriptableObject.RESOURCE.SCRAP, 5);
@@ -202,16 +205,20 @@ public class GameStateMachine : MonoBehaviour
     */
 private void InitializeEndOfDay()
     {
-        ConsoleReference.PrintToConsole("The Day has come to an end, The debt collector takes his cut \n");
+        int debt = 1;
+         //if debt counter reaches 0 win game.
         foreach (ResourceScriptableObject resource in GameManagerReference.PlayerResources)
         {
-            int debt = 1;
+            
             if (resource.ResourceName == "Coin")
             {
                 resource.ResourceQuantity = resource.ResourceQuantity - debt;
-                ConsoleReference.PrintToConsole("He takes: " + debt + " " + resource.ResourceName + " As his payment. \n");
+                CurrentDebt -= debt;
             }
         }
+        GameManagerReference.DebtCollector.DebtCollectorMessage();
+        GameManagerReference.DebtCollector.UpdateDebtCounter(CurrentDebt);
+        GameManagerReference.ResourceInterfaceReference.UpdateResourceInterface(GameManagerReference.PlayerResources);
     }
 
     /*

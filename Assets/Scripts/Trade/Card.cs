@@ -126,7 +126,7 @@ public class Card : MonoBehaviour
     */
     public void DestroyCard()
     {
-        
+        GetComponentInParent<OfferManager>().GetCardList().Remove(this);
         Destroy(this.gameObject);
     }
 

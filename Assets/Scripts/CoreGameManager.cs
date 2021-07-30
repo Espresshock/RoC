@@ -20,6 +20,8 @@ public class CoreGameManager : MonoBehaviour
     //0 = Contract, 1 = Trade, 2 = Order, 3 = End
 
     public PlayerResourcesInterface ResourceInterfaceReference;
+
+    public DebtInterface DebtCollector;
     
     private int TotalTurns; //Measures total number of turns that have passed.
     
