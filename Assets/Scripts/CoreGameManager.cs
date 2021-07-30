@@ -7,7 +7,8 @@ using UnityEngine.UI;
 public class CoreGameManager : MonoBehaviour
 {
 
-    public Console Console; //Reference to the Text Console which prints messages to the player
+    public Console ReetiConsole; //Reference to the Text Console which prints messages to the player
+    public Console MerchantConsole; // reference to text console for merchant popups.
     
     public InputHandler InputHandler;
     
@@ -30,7 +31,7 @@ public class CoreGameManager : MonoBehaviour
     void Start()
     {       
         
-        Console.PrintToConsole("Starting Game");
+        ReetiConsole.PrintToConsole("Starting Game");
         GameStateMachine.StartGame();
 
     }

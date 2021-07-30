@@ -34,7 +34,7 @@ public class DebtInterface : MonoBehaviour
         {
             message = Random.Range(0,5);
         }
-        DebtCollector.text = DebtCollectorMessages[message];
+        DebtCollector.text = "The Debtor takes his cut:\n '" + DebtCollectorMessages[message] + "'";
         previousmessage = message;
     }
 

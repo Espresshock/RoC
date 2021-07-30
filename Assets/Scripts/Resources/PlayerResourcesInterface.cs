@@ -75,10 +75,10 @@ public class PlayerResourcesInterface : MonoBehaviour
 
     private void PrintPlayerResources()
     {
-        GameManagerReference.GetComponent<CoreGameManager>().Console.PrintToConsole("You now have the following resources:" + "\n");
+        GameManagerReference.GetComponent<CoreGameManager>().ReetiConsole.PrintToConsole("We now have" + "\n");
         foreach (ResourceScriptableObject resource in GameManagerReference.GetComponent<CoreGameManager>().PlayerResources)
         {
-            GameManagerReference.GetComponent<CoreGameManager>().Console.PrintToConsole("A total of: " + resource.ResourceQuantity + " " + resource.ResourceName);
+            GameManagerReference.GetComponent<CoreGameManager>().ReetiConsole.PrintToConsole("A total of: " + resource.ResourceQuantity + " " + resource.ResourceName);
         }
     }
 }

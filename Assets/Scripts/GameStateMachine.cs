@@ -22,16 +22,17 @@ public class GameStateMachine : MonoBehaviour
     
     private float PhaseTimer; //Tracks time of phase.
 
-    public Console ConsoleReference;
+    private Console ReetiConsoleReference;
     
 
     public int StartGamePhase;
 
     
-    void Start()
+    void Awake()
     {
         bPhaseInProgress = false;
         CurrentPhase = 0;
+        ReetiConsoleReference = GameManagerReference.ReetiConsole;
         
     }
 
@@ -79,6 +80,8 @@ public class GameStateMachine : MonoBehaviour
 
     private void ResolveCurrentPhase()
     {
+        ReetiConsoleReference.PrintToConsole(" ");
+        GameManagerReference.MerchantConsole.PrintToConsole(" ");
         if(OfferList != null)
         {
             GameManagerReference.ResourceInterfaceReference.UpdateResourceInterface(GameManagerReference.PlayerResources);
@@ -96,7 +99,7 @@ public class GameStateMachine : MonoBehaviour
     private void EndCurrentTurn()
     {
         CurrentPhase = 0;
-        ConsoleReference.PrintToConsole("End of turn: " + CurrentTurn);
+        ReetiConsoleReference.PrintToConsole("End of turn: " + CurrentTurn);
         CurrentTurn += 1;
         StartPhase(CurrentPhase);
     }
@@ -161,18 +164,13 @@ public class GameStateMachine : MonoBehaviour
     */
     private void InitializeTradePhase()
     {
+        string MerchantMessage = null;
         GameManagerReference.AudioManager.PlayTradePhaseSound();
-        ConsoleReference.PrintToConsole("Time to trade! \n");
+        ReetiConsoleReference.PrintToConsole("Time to trade! \n");
         OfferList = OfferManager.GenerateTotalOffers(CurrentTurn);
 
-        foreach(OfferScriptableObject Offer in OfferList)
-        {
-           // ConsoleReference.PrintToConsole("Merchant Requests a total of: " + Offer.ResourcesRequested.ResourceQuantity + ", of your " + Offer.ResourcesRequested.ResourceName + "\n");
-           //ConsoleReference.PrintToConsole("This in Exchange for their: " + Offer.ResourcesOffered.ResourceQuantity + " " + Offer.ResourcesOffered.ResourceName + "\n");
-            ConsoleReference.PrintToConsole("Too Agree with this offer, Press: " + Offer.TradeKey.ToString());
-            //print(Offer.TradeKey);
-        }
-
+        MerchantMessage = "I can offer you the following trades. \nWhat do you think?";
+        GameManagerReference.MerchantConsole.PrintToConsole(MerchantMessage);
         
 
     }
@@ -192,7 +190,8 @@ public class GameStateMachine : MonoBehaviour
         List<ResourceScriptableObject> NewPlayerResources = LocalOffer.AcceptOffer(GameManagerReference.PlayerResources);
         GameManagerReference.PlayerResources = NewPlayerResources;
 
-        ConsoleReference.PrintToConsole("You Accepted the merchants offer!" + "\n");
+        ReetiConsoleReference.PrintToConsole("Thats a Deal!\n");
+        GameManagerReference.MerchantConsole.PrintToConsole("Thanks for doing business!\n");
 
         
         OfferManager.GetCardList().Remove(LocalOffer.CardReference.GetCard());
@@ -232,7 +231,7 @@ private void InitializeEndOfDay()
     */
     private void InitializeContractPhase()
     {
-        ConsoleReference.PrintToConsole("New Contract Offers have Arrived. \n This phase is currently not functional");
+        ReetiConsoleReference.PrintToConsole("New Contract Offers have Arrived. \n This phase is currently not functional");
     }
 
     
@@ -244,7 +243,7 @@ private void InitializeEndOfDay()
     */
     private void InitializeOrderPhase()
     {
-        ConsoleReference.PrintToConsole("A few orders became available. \n This phase is currently not functional \n");
+        ReetiConsoleReference.PrintToConsole("A few orders became available. \n This phase is currently not functional \n");
     }
 
     /*
@@ -261,28 +260,29 @@ private void InitializeEndOfDay()
         
         if(StartGamePhase == 0)
             {
-                ConsoleReference.PrintToConsole("Thank you for playing River of Coin v0.2.5 \n ");
-                ConsoleReference.PrintToConsole("You can Press Space Bar to continue");
+                ReetiConsoleReference.PrintToConsole("Thank you for playing River of Coin v0.2.5 \nPress Space Bar to continue");
             }
         if(StartGamePhase == 1)
             {
-                ConsoleReference.PrintToConsole("This game is Katelyst's entry in the RNDGAME JAM II. \n \n");
+                ReetiConsoleReference.PrintToConsole("This game is Katelyst's entry in the RNDGAME JAM II. \n \n");
             }
         if(StartGamePhase == 2)
             {
-                ConsoleReference.PrintToConsole("The River of Coin is home to a vast variety of traders, savy merchants, and customers. \n");
+                ReetiConsoleReference.PrintToConsole("The River of Coin is home to a vast variety of traders, savy merchants, and customers. \n");
             }
          if(StartGamePhase == 3)
             {
-                ConsoleReference.PrintToConsole("Reeti Recently bought a shop with the ambition of ascending up the river of coin, You can help by managing some of the day to day tasks.\n");
+                ReetiConsoleReference.PrintToConsole("Reeti Recently bought a shop with the ambition of ascending up the river of coin, You can help by managing some of the day to day tasks.\n");
             }
         if(StartGamePhase == 4)
             {
-                ConsoleReference.PrintToConsole("Please reach out with any comments, we are excited to hear what you think! \n The game is currently limited in functionality, but aims to depict some core ideas. \n ");
+                ReetiConsoleReference.PrintToConsole("Please reach out with any comments, we are excited to hear what you think! \n The game is currently limited in functionality, but aims to depict some core ideas. \n ");
             }
         if(StartGamePhase == 5)
             {
-                ConsoleReference.PrintToConsole("The Game loop will Start in a few seconds. \n Use z, x, and c to accept different trades!");
+                ReetiConsoleReference.PrintToConsole("The Game loop will Start in a few seconds.");
+                GameManagerReference.MerchantConsole.PrintToConsole("This window displays merchant offers, Use z, x, and c to accept different trades!");
+
                 PhaseTimer = 10;
                 InitializePlayerResources();
                 bPhaseInProgress = true;
