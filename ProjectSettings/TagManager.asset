@@ -10,6 +10,7 @@ TagManager:
   - Coin
   - Scrap
   - Shiny
+  - Key
   layers:
   - Default
   - TransparentFX

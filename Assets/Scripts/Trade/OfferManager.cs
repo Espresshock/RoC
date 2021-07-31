@@ -9,7 +9,7 @@ public class OfferManager : MonoBehaviour
 
     private List<Card> CardList;
 
-    private List<OfferScriptableObject> Offers;
+    public List<OfferScriptableObject> Offers;
     // Start is called before the first frame update
     void Start()
     {
@@ -66,7 +66,8 @@ public class OfferManager : MonoBehaviour
         Offer.ResourcesRequested = Request;
         Offer.ResourcesOffered = offer;
         
-        Offer.TradeKey = Offer.GenerateTradeKey();
+        Offer.TradeKey = Offer.GenerateTradeKey(this);
+        print(Offer.TradeKey.ToString());
 
         Card card;
         card = Offer.GenerateCard(CardScriptReference, Offer, this.gameObject);

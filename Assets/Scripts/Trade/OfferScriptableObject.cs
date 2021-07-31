@@ -93,11 +93,10 @@ public class OfferScriptableObject : ScriptableObject
         return PlayerResources;
     }
 
-    public KeyCode GenerateTradeKey()
+    public KeyCode GenerateTradeKey(OfferManager offerManager)
     {
-        List<OfferScriptableObject> Trades = new List<OfferScriptableObject>(); //OfferManager.GetOfferList();
         
-        switch(Random.Range(0,2))
+        switch(offerManager.Offers.Count)
         {
             case 0:
                 TradeKey = KeyCode.Z;

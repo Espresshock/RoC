@@ -3179,6 +3179,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CardScriptReference: {fileID: 7793807721612704182, guid: be34bac9e4fe08e41818abef6dfffd1b, type: 3}
+  Offers: []
 --- !u!114 &1668583651
 MonoBehaviour:
   m_ObjectHideFlags: 0

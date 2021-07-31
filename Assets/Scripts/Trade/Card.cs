@@ -11,7 +11,7 @@ public class Card : MonoBehaviour
     public Image CardImage;
     public Image RequestedResourceImage;
     public Image OfferedResourceImage;
-
+    public Image KeyCodeImage;
     public Text RequestedQuantity;
     public Text OfferedQuantity;
 
@@ -76,6 +76,18 @@ public class Card : MonoBehaviour
            }
         }
 
+        switch(ThisOffer.TradeKey.ToString())
+        {
+            case "Z":
+            KeyCodeImage.sprite = Resources.Load<Sprite>("ResourceArt/Z-KeySliced");
+                break;
+            case "X":
+            KeyCodeImage.sprite = Resources.Load<Sprite>("ResourceArt/X-KeySliced");
+                break;
+            case "C":
+            KeyCodeImage.sprite = Resources.Load<Sprite>("ResourceArt/C-KeySliced");
+                break;
+        }
 
             CardImage.GetComponent<Image>().sprite = CardTex;
             RequestedResourceImage.GetComponent<Image>().sprite = Requested.ResourceIcon;
