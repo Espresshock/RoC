@@ -134,7 +134,7 @@ public class GameStateMachine : MonoBehaviour
     {
 
         ResourceScriptableObject StartCoin = ScriptableObject.CreateInstance<ResourceScriptableObject>();
-        StartCoin.SetResource(StartCoin, ResourceScriptableObject.RESOURCE.COIN, 10);
+        StartCoin.SetResource(StartCoin, ResourceScriptableObject.RESOURCE.COIN, 5);
         GameManagerReference.PlayerResources.Add(StartCoin);
 
         CurrentDebt = 10;
@@ -221,6 +221,10 @@ private void InitializeEndOfDay()
         GameManagerReference.DebtCollector.DebtCollectorMessage();
         GameManagerReference.DebtCollector.UpdateDebtCounter(CurrentDebt);
         GameManagerReference.ResourceInterfaceReference.UpdateResourceInterface(GameManagerReference.PlayerResources);
+
+        if(CurrentDebt == 0){
+            ReetiConsoleReference.PrintToConsole("You have paid of your debt!\n Thank you for playing");
+        }
     }
 
     /*
@@ -260,25 +264,9 @@ private void InitializeEndOfDay()
         
         if(StartGamePhase == 0)
             {
-                ReetiConsoleReference.PrintToConsole("Thank you for playing River of Coin v0.2.5 \nPress Space Bar to continue");
+                ReetiConsoleReference.PrintToConsole("Thank you for playing River of Coin v0.3.4 \nPress Space Bar to continue");
             }
         if(StartGamePhase == 1)
-            {
-                ReetiConsoleReference.PrintToConsole("This game is Katelyst's entry in the RNDGAME JAM II. \n \n");
-            }
-        if(StartGamePhase == 2)
-            {
-                ReetiConsoleReference.PrintToConsole("The River of Coin is home to a vast variety of traders, savy merchants, and customers. \n");
-            }
-         if(StartGamePhase == 3)
-            {
-                ReetiConsoleReference.PrintToConsole("Reeti Recently bought a shop with the ambition of ascending up the river of coin, You can help by managing some of the day to day tasks.\n");
-            }
-        if(StartGamePhase == 4)
-            {
-                ReetiConsoleReference.PrintToConsole("Please reach out with any comments, we are excited to hear what you think! \n The game is currently limited in functionality, but aims to depict some core ideas. \n ");
-            }
-        if(StartGamePhase == 5)
             {
                 ReetiConsoleReference.PrintToConsole("The Game loop will Start in a few seconds.");
                 GameManagerReference.MerchantConsole.PrintToConsole("This window displays merchant offers, Use z, x, and c to accept different trades!");
